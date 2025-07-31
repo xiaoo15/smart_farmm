@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EcoPlant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #f0f0f0;
+        font-family: "Poppins", sans-serif;
+      }
+        .recent-product-section {
+            background-color: #E6F5EA; /* Latar belakang hijau muda untuk bagian */
+            padding: 40px 0; /* Padding atas dan bawah */
+            border-radius: 10px; /* Sudut membulat */
+            margin-top: 50px; /* Jarak dari atas */
+            position: relative; /* Untuk menempatkan panah jika diperlukan */
+            /* Ini akan membuat bentuk seperti tab folder */
+            border-top-left-radius: 15px; /* Lebih bulat di kiri atas */
+            border-top-right-radius: 60px; /* Lebih seperti tab di kanan atas */
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            overflow: hidden; /* Penting untuk bentuk tab */
+        }
+
+        /* Bagian tab folder */
+        .recent-product-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px; /* Lebar bagian tab */
+            height: 100%;
+            background-color: #D3EFDB; /* Warna lebih gelap untuk bagian tab */
+            border-top-left-radius: 15px;
+            border-top-right-radius: 0; /* Tidak ada bulat di sini */
+            z-index: 1; /* Pastikan di bawah teks judul utama */
+        }
+        .recent-product-header-wrapper {
+            position: relative;
+            z-index: 2; /* Pastikan di atas pseudo-element */
+            padding-left: 20px; /* Sesuaikan agar tidak terlalu dekat dengan tepi */
+            padding-top: 15px;
+        }
+
+        .recent-product-header {
+            color: #388E3C; /* Hijau gelap untuk judul */
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px; /* Kurangi jarak bawah */
+        }
+        .recent-product-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 15px; /* Sudut lebih bulat */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+            padding: 20px;
+            display: flex; /* Untuk menyelaraskan gambar dan teks */
+            align-items: center; /* Sejajarkan item secara vertikal */
+            margin-bottom: 20px; /* Jarak antar kartu di layar kecil */
+            transition: transform 0.2s ease-in-out; /* Efek hover halus */
+            position: relative;
+            z-index: 3;
+        }
+        .product-card:hover {
+            transform: translateY(-5px); /* Angkat kartu saat di-hover */
+        }
+        .product-card img {
+            width: 80px; /* Sesuaikan ukuran gambar */
+            height: 80px;
+            object-fit: contain;
+            margin-right: 20px; /* Jarak antara gambar dan teks */
+        }
+        .product-card-title {
+            color: #388E3C; /* Hijau gelap untuk judul kartu */
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .product-card-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Styling untuk panah navigasi (contoh dasar) */
+        .navigation-arrows {
+            position: absolute;
+            top: 40px; /* Sesuaikan posisi */
+            right: 40px; /* Sesuaikan posisi */
+            display: flex;
+            gap: 10px;
+            z-index: 2; /* Pastikan di atas elemen lain */
+        }
+        .arrow-btn {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            color: #388E3C;
+            font-weight: bold;
+        }
+        .arrow-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Penyesuaian untuk teks deskripsi di bawah judul utama */
+        .header-description {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            max-width: 300px; /* Batasi lebar teks agar tidak terlalu panjang */
+        }
+
+        .gallery-section {
+            padding: 80px 0; /* Padding atas dan bawah untuk section */
+            text-align: center; /* Pusatkan semua konten dalam section */
+        }
+        .gallery-subtitle {
+            font-size: 0.9rem;
+            color: #6c757d;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .gallery-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block; /* Agar underline sesuai lebar teks */
+            padding-bottom: 10px; /* Jarak antara teks dan underline */
+        }
+        .gallery-title::after {
+            content: '';
+            position: absolute;
+            left: 50%; /* Pusatkan underline */
+            transform: translateX(-50%); /* Pusatkan underline */
+            bottom: 0;
+            width: 80px; /* Lebar underline */
+            height: 3px;
+            background-color: #28a745; /* Warna hijau untuk underline */
+            border-radius: 5px; /* Sudut membulat untuk underline */
+        }
+        .gallery-img-wrapper {
+            padding: 10px; /* Jarak antar gambar */
+        }
+        .gallery-img {
+            width: 100%;
+            height: 250px; /* Tinggi gambar yang seragam */
+            object-fit: cover; /* Pastikan gambar menutupi area tanpa terdistorsi */
+            border-radius: 10px; /* Sudut membulat untuk gambar */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+            transition: transform 0.3s ease-in-out; /* Efek hover */
+        }
+        .gallery-img:hover {
+            transform: translateY(-5px); /* Angkat sedikit saat di-hover */
+        }
+
+        /* Responsif untuk layar lebih kecil */
+        @media (max-width: 767.98px) {
+            .gallery-title {
+                font-size: 2rem;
+            }
+            .gallery-section {
+                padding: 50px 0;
+            }
+        }
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top px-md-5">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#"><span class="text-success">E</span>coPlant</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto gap-2">
+            <li class="nav-item">
+
+              <a class="nav-link active" href="#main">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="# ">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">Kerajang</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container pt-5 mt-4">
+      <div class="row">
+        <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start text-center text-md-start gap-3">
+          <h1 class="fs-1">Rooted in <span class="text-success">Nature</span> and Grown with Love.</h1>
+          <p>Membangun masa depan hijau lewat inovasi dan cinta pada tanaman.</p>
+           <div class="d-flex">
+          <button type="button" class="btn btn-success me-2">Beli Sekarang</button>
+          <button type="button" class="btn">
+          <img src="images/images-removebg-preview (1).png" alt="Logo" class="me-2" style="height: 2em;"> klik aku
+          </button>
+        </div>
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+          <img src="images/download (1).png" class="rounded img-fluid d-none d-md-block" style="max-width: 60%;" alt="picture">
+        </div>
+      </div>
+
+       <div class="container recent-product-section">
+        <div class="navigation-arrows">
+            <div class="arrow-btn">&lt;</div>
+            <div class="arrow-btn">&gt;</div>
+        </div>
+
+        <div class="recent-product-header-wrapper">
+            <h2 class="recent-product-header">RECENT PRODUCT</h2>
+            <p class="header-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet nibh eu est ullamcorper.
+            </p>
+        </div>
+
+        <div class="row px-3"> <div class="col-md-6">
+                <div class="product-card">
+                    <img src="images/eI6xOPtKKT-removebg-preview.png" alt="Toss the tubs image">
+                    <div>
+                        <h5 class="product-card-title">Toss the tubs</h5>
+                        <p class="product-card-text">Toss the tubs into the recycling bin! Let's make our community greener.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="product-card">
+                    <img src="images/download_6-removebg-preview.png" alt="Reveal the plant image">
+                    <div>
+                        <h5 class="product-card-title">Reveal the plant</h5>
+                        <p class="product-card-text">As we removed the large cloth covering, the audience eagerly anticipated.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="container pt-5 mt-4">
+        <div class="row">
+            <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                <img src="images/fb3c97abe7243934a7ccf7e8a44fa9f0-removebg-preview.png" class="rounded img-fluid d-none d-md-block" style="max-width: 100%;" alt="picture">
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start text-center text-md-start gap-3">
+                <h5 class="gallery-subtitle">Gallery</h5>
+                <h1 class="fs-1">Rooted in <span class="text-success">Nature</span> and Grown with Love.</h1>
+                <p>Membangun masa depan hijau lewat inovasi dan cinta pada tanaman.</p>
+                <div class="d-flex">
+                    <button type="button" class="btn btn-success me-2">Beli Sekarang</button>
+                    <button type="button" class="btn border-success text-succes me-2">Beli Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="gallery-section">
+        <div class="container">
+            <h5 class="gallery-subtitle">Gallery</h5>
+            <h2 class="gallery-title">OUR GALLERY</h2>
+
+            <div id="carouselExampleCaptions" class="carousel slide">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="images/wagubri-ajak-warga-riau-gemar-berta.jpg" class="d-block w-100 rounded" alt="foto">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="images/olerikultura.jpg" class="d-block w-100 rounded" alt="foto">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="images/images.jpeg" class="d-block w-100 rounded" alt="foto">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  </body>
+</html>
