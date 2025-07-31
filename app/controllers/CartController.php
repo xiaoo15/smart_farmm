@@ -89,6 +89,7 @@ class CartController
         // Setelah update, kirim balik data keranjang terbaru
         $this->getCartData();
     }
+    
 
     /**
      * FUNGSI BARU: Menghapus item dari keranjang via AJAX.
@@ -142,21 +143,30 @@ class CartController
     // Fungsi processCheckout tidak berubah
     public function processCheckout()
     {
-        // ... (logika checkout yang sudah ada)
-        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'customer') {
+        // Pastikan pelanggan sudah login
+        if (!isset($_SESSION['user'])) {
+            // Arahkan ke login jika belum
             header('Location: index.php?action=showLogin&error=checkout');
             exit;
         }
+
+        // Pastikan keranjang tidak kosong
         if (empty($_SESSION['cart'])) {
             header('Location: index.php?action=home');
             exit;
         }
+
         global $conn;
         $productModel = new Product($conn);
         $transactionModel = new Transaction($conn);
+
+        // Ambil ID pengguna yang sedang login
+        $userId = $_SESSION['user']['id'];
+
         $cartData = [];
         $product_ids = array_keys($_SESSION['cart']);
         $products_in_cart = $productModel->getProductsByIds($product_ids);
+
         foreach ($products_in_cart as $product) {
             $cartData[] = [
                 'id' => $product['id'],
@@ -164,11 +174,18 @@ class CartController
                 'quantity' => $_SESSION['cart'][$product['id']]
             ];
         }
-        $transactionId = $transactionModel->create($cartData);
+
+        // ---- INI BAGIAN PENTINGNYA ----
+        // Kirim $userId ke model Transaction saat membuat transaksi
+        $transactionId = $transactionModel->create($cartData, $userId);
+
         if ($transactionId) {
-            unset($_SESSION['cart']);
-            include __DIR__ . '/../views/checkout_success.php';
+            unset($_SESSION['cart']); // Kosongkan keranjang
+            // Arahkan ke halaman sukses atau langsung ke detail pesanan
+            header('Location: index.php?action=orderDetails&id=' . $transactionId . '&status=success');
+            exit;
         } else {
+            // Tampilkan pesan error jika gagal
             echo "Maaf, terjadi kesalahan saat memproses pesanan Anda.";
         }
     }

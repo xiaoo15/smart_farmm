@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'SmartFarm') ?></title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -163,9 +160,14 @@
         <li class="nav-item">
             <a class="nav-link <?= isset($_GET['action']) && $_GET['action'] == 'showCart' ? 'active' : '' ?>" href="index.php?action=showCart">
                 <i class="fas fa-shopping-cart me-1 d-lg-none"></i> Keranjang
-                <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-                    <span class="badge bg-danger cart-badge"><?= count($_SESSION['cart']) ?></span>
-                <?php endif; ?>
+                <?php 
+                  // Inisialisasi cart count
+                  $cart_count = 0;
+                  if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                      $cart_count = count($_SESSION['cart']);
+                  }
+                ?>
+                <span class="badge bg-danger cart-badge" style="<?= $cart_count > 0 ? '' : 'display:none;' ?>"><?= $cart_count ?></span>
             </a>
         </li>
         <?php if (isset($_SESSION['user'])): ?>
@@ -175,10 +177,11 @@
                 <span>Halo, <?= htmlspecialchars($_SESSION['user']['username']) ?></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="index.php?action=myOrders"><i class="fas fa-history me-2"></i>Riwayat Pesanan</a></li>
                 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
                     <li><a class="dropdown-item" href="public/index.php?action=dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</a></li>
-                    <li><hr class="dropdown-divider"></li>
                 <?php endif; ?>
+                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="index.php?action=logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
               </ul>
             </li>
@@ -193,4 +196,3 @@
     </div>
   </div>
 </nav>
-

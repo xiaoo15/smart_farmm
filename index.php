@@ -55,6 +55,12 @@ switch ($action) {
     case 'register':
         $authController->handleRegister();
         break;
+    case 'myOrders':
+        $authController->showMyOrders();
+        break;
+    case 'orderDetails':
+        $authController->showOrderDetails();
+        break;
     case 'logout':
         $authController->handleLogout();
         break;
@@ -62,4 +68,3 @@ switch ($action) {
         $homeController->showHome();
         break;
 }
-?>

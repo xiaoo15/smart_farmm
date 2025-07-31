@@ -1,5 +1,5 @@
 <?php
-// File: app/controllers/ProductController.php
+// File: app/controllers/ProductController.php (SUDAH DIPERBAIKI)
 
 require_once __DIR__ . '/../models/Product.php';
 
@@ -7,35 +7,30 @@ class ProductController
 {
     public function showProducts()
     {
-        global $conn; // Ambil koneksi dari database.php
+        global $conn;
         $productModel = new Product($conn);
         $products = $productModel->getAll();
-
-        // Panggil view dan kirim data products
         include __DIR__ . '/../views/products.php';
     }
 
     public function handleCreate()
     {
-        // --- ALAT SADAP CONTROLLER ---
-        echo "<h1>Laporan Intelijen dari Controller:</h1>";
-        echo "<pre>";
-        var_dump($_FILES);
-        echo "</pre>";
-        die("--- Misi di Controller Selesai ---");
+        // --- BAGIAN INI YANG DIPERBAIKI ---
+        // Kode var_dump dan die() yang sebelumnya ada di sini sudah dihapus.
+        // Sekarang, proses akan lanjut ke validasi dan penyimpanan.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $conn;
             $productModel = new Product($conn);
             if ($productModel->create($_POST, $_FILES)) {
-                // Set session flash message untuk notifikasi
                 $_SESSION['flash_message'] = "Produk berhasil ditambahkan!";
             } else {
-                $_SESSION['flash_message'] = "GAGAL menambahkan produk.";
+                $_SESSION['flash_message'] = "GAGAL menambahkan produk. Cek izin folder 'public/images/products'.";
             }
         }
         header('Location: index.php?action=products');
         exit;
     }
+
     public function getProductJson()
     {
         header('Content-Type: application/json');
@@ -52,9 +47,6 @@ class ProductController
         exit;
     }
 
-    /**
-     * Menangani proses update produk dari form edit.
-     */
     public function handleUpdate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
@@ -84,6 +76,4 @@ class ProductController
         header('Location: index.php?action=products');
         exit;
     }
-
-    // Nanti kita tambah fungsi update di sini
 }

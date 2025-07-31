@@ -78,6 +78,33 @@ class Transaction {
         return $row['total'] ?? 0;
     }
 
+    // ---- TAMBAHKAN FUNGSI BARU DI BAWAH INI ----
+    public function getTransactionsByUserId($userId) {
+        $userId = (int)$userId;
+        $query = "SELECT * FROM transactions WHERE user_id = $userId ORDER BY transaction_date DESC";
+        return mysqli_query($this->conn, $query);
+    }
+
+    public function getTransactionDetailsForUser($transactionId, $userId) {
+        $transactionId = (int)$transactionId;
+        $userId = (int)$userId;
+
+        // Query ini menggabungkan pengecekan ID transaksi dan ID pengguna
+        $query = "
+            SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
+            FROM transaction_items ti
+            JOIN products p ON ti.product_id = p.id
+            JOIN transactions t ON ti.transaction_id = t.id
+            WHERE ti.transaction_id = $transactionId AND t.user_id = $userId
+        ";
+        $result = mysqli_query($this->conn, $query);
+        $details = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $details[] = $row;
+        }
+        return $details;
+    }
+
     public function getWeeklySalesData() {
         $query = "
             SELECT 

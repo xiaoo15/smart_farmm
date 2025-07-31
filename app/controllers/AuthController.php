@@ -33,6 +33,46 @@ class AuthController {
         }
     }
 
+    public function showMyOrders() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=showLogin');
+            exit;
+        }
+
+        global $conn;
+        $transactionModel = new Transaction($conn);
+        $userId = $_SESSION['user']['id'];
+        $transactions = $transactionModel->getTransactionsByUserId($userId);
+
+        include __DIR__ . '/../views/my_orders.php';
+    }
+
+    /**
+     * Menampilkan detail dari satu pesanan.
+     */
+    public function showOrderDetails() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=showLogin');
+            exit;
+        }
+
+        $transactionId = $_GET['id'] ?? 0;
+        $userId = $_SESSION['user']['id'];
+
+        global $conn;
+        $transactionModel = new Transaction($conn);
+        $details = $transactionModel->getTransactionDetailsForUser($transactionId, $userId);
+
+        // Jika tidak ada detail (mungkin mencoba akses pesanan orang lain),
+        // kembalikan ke halaman riwayat pesanan.
+        if (empty($details)) {
+            header('Location: index.php?action=myOrders&error=notfound');
+            exit;
+        }
+
+        include __DIR__ . '/../views/order_details.php';
+    }
+
     public function handleLogout() {
         session_destroy();
         // Selalu arahkan ke halaman login customer setelah logout
