@@ -1,5 +1,4 @@
 <?php
-// File: app/views/home.php (SUDAH DIRAPIKAN)
 $title = "SmartFarm - Solusi Pertanian Modern";
 include 'templates/public_header.php';
 ?>
