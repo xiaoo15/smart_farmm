@@ -74,6 +74,7 @@ include 'templates/public_header.php';
                 <p class="fs-4 text-muted py-5">Oops! Produk yang kamu cari tidak ditemukan.</p>
             </div>
         </div>
+        <div></div>
     </div>
 </section>
 
