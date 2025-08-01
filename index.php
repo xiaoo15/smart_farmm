@@ -25,9 +25,6 @@ switch ($action) {
     case 'showCart':
         $cartController->showCart();
         break;
-    case 'addToCart':
-        $cartController->addToCart();
-        break;
     case 'getCartData':
         $cartController->getCartData();
         break;
@@ -61,12 +58,21 @@ switch ($action) {
     case 'orderDetails':
         $authController->showOrderDetails();
         break;
-    case 'showCheckout': // <--- INI ROUTE BARUNYA
-    $cartController->showCheckoutPage();
-    break;
-    case 'logout':
-        $authController->handleLogout();
+    case 'showCart':
+
+        $cartController->showCart();
         break;
+    case 'showCheckout': // <--- INI ROUTE BARUNYA
+        $cartController->showCheckoutPage();
+        break;
+    case 'allProducts':
+        $homeController->showAllProducts();
+        break;
+    case 'logout':
+    session_destroy();
+    // Arahkan ke halaman login customer di folder utama
+    header('Location: ../index.php?action=showLogin');
+    exit;
     default:
         $homeController->showHome();
         break;

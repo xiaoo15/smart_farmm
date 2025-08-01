@@ -1,5 +1,4 @@
 <?php
-// File: app/views/home.php (SUDAH DIRAPIKAN)
 $title = "SmartFarm - Solusi Pertanian Modern";
 include 'templates/public_header.php';
 ?>
@@ -29,20 +28,21 @@ include 'templates/public_header.php';
     </div>
 </main>
 
-<section id="katalog" class="py-5" style="background-color: #f8f9fa;">
-    <div class="container">
+<section id="katalog" class="py-5 bg-light"> <div class="container">
         <div class="text-center mb-5">
-            <h5 class="gallery-subtitle">PRODUK KAMI</h5>
-            <h2 class="gallery-title">KATALOG PRODUK</h2>
+            <h5 class="gallery-subtitle text-success">PRODUK KAMI</h5>
+            <h2 class="gallery-title fw-bold">KATALOG PRODUK</h2>
         </div>
+        
         <div class="row justify-content-center mb-4">
             <div class="col-lg-8">
-                <div class="input-group">
-                    <span class="input-group-text border-end-0 bg-white">🔍</span>
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text border-end-0 bg-white"><i class="bi bi-search"></i></span> 
                     <input type="text" id="product-search-input" class="form-control border-start-0" placeholder="Cari sayur, buah, atau produk lainnya...">
                 </div>
             </div>
         </div>
+
         <div id="product-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             <?php if (isset($products) && mysqli_num_rows($products) > 0): ?>
                 <?php while ($product = mysqli_fetch_assoc($products)): ?>
@@ -54,26 +54,27 @@ include 'templates/public_header.php';
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title product-title"><?= htmlspecialchars($product['name']) ?></h5>
                             <p class="card-text product-price">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
-                            <div class="mt-auto">
-                                <?php if ($product['stock'] > 0): ?>
-                                    <button class="btn btn-success w-100 add-to-cart-btn" data-id="<?= $product['id'] ?>">+ Tambah ke Keranjang</button>
+                            <div class="mt-auto pt-2"> <?php if ($product['stock'] > 0): ?>
+                                    <button class="btn btn-success w-100 add-to-cart-btn fw-semibold" data-id="<?= $product['id'] ?>"><i class="bi bi-cart-plus-fill"></i> Tambah</button>
                                 <?php else: ?>
                                     <button class="btn btn-secondary w-100" disabled>Stok Habis</button>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-0 text-center">
-                             <small class="text-muted">Stok: <?= $product['stock'] ?></small>
                         </div>
-                    </div>
                 </div>
                 <?php endwhile; ?>
             <?php else: ?>
                 <div class="col-12"><p class="text-center text-muted fs-5 py-5">Belum ada produk yang tersedia.</p></div>
             <?php endif; ?>
+
             <div id="no-product-found" class="col-12 text-center" style="display: none;">
                 <p class="fs-4 text-muted py-5">Oops! Produk yang kamu cari tidak ditemukan.</p>
             </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="index.php?action=allProducts" class="btn btn-outline-success btn-lg">Lihat Semua Produk</a>
         </div>
     </div>
 </section>
