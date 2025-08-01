@@ -141,18 +141,22 @@ class CartController
     }
 
     // Fungsi processCheckout tidak berubah
+    public function showCheckoutPage()
+    {
+        // Panggil model product untuk mendapatkan data harga terbaru
+        global $conn;
+        $productModel = new Product($conn);
+        include __DIR__ . '/../views/checkout.php';
+    }
+    
+    /**
+     * FUNGSI LAMA (DIRENOVASI): Proses checkout sekarang lebih canggih.
+     */
     public function processCheckout()
     {
-        // Pastikan pelanggan sudah login
-        if (!isset($_SESSION['user'])) {
-            // Arahkan ke login jika belum
-            header('Location: index.php?action=showLogin&error=checkout');
-            exit;
-        }
-
-        // Pastikan keranjang tidak kosong
-        if (empty($_SESSION['cart'])) {
-            header('Location: index.php?action=home');
+        // Validasi dasar
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['payment_method']) || empty($_SESSION['cart'])) {
+            header('Location: index.php?action=showCart'); // Jika aneh, balik ke keranjang
             exit;
         }
 
@@ -160,8 +164,9 @@ class CartController
         $productModel = new Product($conn);
         $transactionModel = new Transaction($conn);
 
-        // Ambil ID pengguna yang sedang login
-        $userId = $_SESSION['user']['id'];
+        // Ambil data dari form
+        $paymentMethod = $_POST['payment_method'];
+        $userId = isset($_SESSION['user']) ? $_SESSION['user']['id'] : null;
 
         $cartData = [];
         $product_ids = array_keys($_SESSION['cart']);
@@ -175,18 +180,18 @@ class CartController
             ];
         }
 
-        // ---- INI BAGIAN PENTINGNYA ----
-        // Kirim $userId ke model Transaction saat membuat transaksi
-        $transactionId = $transactionModel->create($cartData, $userId);
+        // Kirim semua data (termasuk metode pembayaran) ke model
+        $transactionId = $transactionModel->create($cartData, $userId, $paymentMethod);
 
         if ($transactionId) {
             unset($_SESSION['cart']); // Kosongkan keranjang
-            // Arahkan ke halaman sukses atau langsung ke detail pesanan
             header('Location: index.php?action=orderDetails&id=' . $transactionId . '&status=success');
             exit;
         } else {
-            // Tampilkan pesan error jika gagal
-            echo "Maaf, terjadi kesalahan saat memproses pesanan Anda.";
+            $_SESSION['flash_message'] = "Maaf, terjadi kesalahan saat memproses pesanan Anda. Stok mungkin tidak mencukupi.";
+            $_SESSION['flash_message_type'] = "danger";
+            header('Location: index.php?action=showCart');
+            exit;
         }
     }
 }

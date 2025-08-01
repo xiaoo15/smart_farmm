@@ -17,7 +17,7 @@ class AuthController {
 
                 if ($user['role'] === 'admin') {
                     // Jika admin, arahkan ke pintu masuk admin
-                    header('Location: public/index.php?action=dashboard');
+                    header('Location: admin/index.php?action=dashboard');
                 } else {
                     // Jika customer, arahkan ke pintu masuk customer
                     header('Location: index.php?action=home');

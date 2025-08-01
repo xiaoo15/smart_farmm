@@ -61,6 +61,9 @@ switch ($action) {
     case 'orderDetails':
         $authController->showOrderDetails();
         break;
+    case 'showCheckout': // <--- INI ROUTE BARUNYA
+    $cartController->showCheckoutPage();
+    break;
     case 'logout':
         $authController->handleLogout();
         break;

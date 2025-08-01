@@ -1,43 +1,60 @@
 <?php
 // File: app/models/Transaction.php
 
-class Transaction {
+class Transaction
+{
     private $conn;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function create($cartData) {
+
+
+    public function create($cartData, $userId = null, $paymentMethod = 'unknown')
+    {
         mysqli_begin_transaction($this->conn);
         try {
             $totalPrice = 0;
             foreach ($cartData as $item) {
                 $totalPrice += $item['price'] * $item['quantity'];
             }
-            $queryTrans = "INSERT INTO transactions (total_price) VALUES ('$totalPrice')";
-            mysqli_query($this->conn, $queryTrans);
+
+            // ---- INI BAGIAN PINTARNYA ----
+            $queryTrans = "INSERT INTO transactions (user_id, total_price, payment_method) VALUES (?, ?, ?)";
+            $stmt = mysqli_prepare($this->conn, $queryTrans);
+
+            // Ikat parameter. 'ids' artinya integer, decimal, string
+            mysqli_stmt_bind_param($stmt, "ids", $userId, $totalPrice, $paymentMethod);
+
+            mysqli_stmt_execute($stmt);
             $transactionId = mysqli_insert_id($this->conn);
 
+            // ... (sisa kodenya sama persis kayak sebelumnya buat masukin item & update stok) ...
             foreach ($cartData as $item) {
                 $productId = (int)$item['id'];
                 $quantity = (int)$item['quantity'];
                 $price = (float)$item['price'];
                 $queryItems = "INSERT INTO transaction_items (transaction_id, product_id, quantity, price) VALUES ($transactionId, $productId, $quantity, $price)";
                 mysqli_query($this->conn, $queryItems);
-                $queryUpdateStock = "UPDATE products SET stock = stock - $quantity WHERE id = $productId";
-                mysqli_query($this->conn, $queryUpdateStock);
+                $queryUpdateStock = "UPDATE products SET stock = stock - $quantity WHERE id = $productId AND stock >= $quantity";
+                $updateResult = mysqli_query($this->conn, $queryUpdateStock);
+                if (mysqli_affected_rows($this->conn) == 0) {
+                    throw new Exception("Stok produk tidak mencukupi.");
+                }
             }
 
             mysqli_commit($this->conn);
             return $transactionId;
-        } catch (mysqli_sql_exception $exception) {
+        } catch (Exception $exception) {
             mysqli_rollback($this->conn);
             return false;
         }
     }
 
-    public function getReport($startDate = null, $endDate = null) {
+    public function getReport($startDate = null, $endDate = null)
+    {
         $query = "SELECT * FROM transactions";
         if ($startDate && $endDate) {
             $endDate = $endDate . ' 23:59:59';
@@ -47,7 +64,8 @@ class Transaction {
         return mysqli_query($this->conn, $query);
     }
 
-    public function getTransactionDetails($transactionId) {
+    public function getTransactionDetails($transactionId)
+    {
         $id = (int)$transactionId;
         $query = "SELECT ti.*, p.name as product_name 
                   FROM transaction_items ti
@@ -62,8 +80,9 @@ class Transaction {
     }
 
     // --- INI FUNGSI-FUNGSI BARU YANG SEBELUMNYA HILANG ---
-    
-    public function getTodaysSales() {
+
+    public function getTodaysSales()
+    {
         $today = date('Y-m-d');
         $query = "SELECT SUM(total_price) as total FROM transactions WHERE DATE(transaction_date) = '$today'";
         $result = mysqli_query($this->conn, $query);
@@ -71,7 +90,8 @@ class Transaction {
         return $row['total'] ?? 0;
     }
 
-    public function getTotalTransactions() {
+    public function getTotalTransactions()
+    {
         $query = "SELECT COUNT(id) as total FROM transactions";
         $result = mysqli_query($this->conn, $query);
         $row = mysqli_fetch_assoc($result);
@@ -79,13 +99,15 @@ class Transaction {
     }
 
     // ---- TAMBAHKAN FUNGSI BARU DI BAWAH INI ----
-    public function getTransactionsByUserId($userId) {
+    public function getTransactionsByUserId($userId)
+    {
         $userId = (int)$userId;
         $query = "SELECT * FROM transactions WHERE user_id = $userId ORDER BY transaction_date DESC";
         return mysqli_query($this->conn, $query);
     }
 
-    public function getTransactionDetailsForUser($transactionId, $userId) {
+    public function getTransactionDetailsForUser($transactionId, $userId)
+    {
         $transactionId = (int)$transactionId;
         $userId = (int)$userId;
 
@@ -105,7 +127,8 @@ class Transaction {
         return $details;
     }
 
-    public function getWeeklySalesData() {
+    public function getWeeklySalesData()
+    {
         $query = "
             SELECT 
                 DATE_FORMAT(transaction_date, '%W') as day_name,
@@ -117,22 +140,21 @@ class Transaction {
             ORDER BY sale_date ASC;
         ";
         $result = mysqli_query($this->conn, $query);
-        
+
         $days = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-$i days"));
             $dayName = date('l', strtotime($date));
             $days[$dayName] = 0;
         }
-        
+
         while ($row = mysqli_fetch_assoc($result)) {
             $days[$row['day_name']] = (int)$row['total_sales'];
         }
-        
+
         return [
             'labels' => array_keys($days),
             'data' => array_values($days)
         ];
     }
 }
-?>
