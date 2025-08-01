@@ -9,6 +9,19 @@ class HomeController {
      * Fungsi ini untuk menampilkan halaman utama (etalase toko)
      * untuk pelanggan.
      */
+
+
+    /**
+     * FUNGSI BARU: Untuk menampilkan halaman semua produk.
+     * Logikanya sama persis dengan showHome(), tapi view yang dipanggil beda.
+     */
+    public function showAllProducts() {
+        global $conn;
+        $productModel = new Product($conn);
+        $products = $productModel->getAll(); // Ambil semua data produk
+        include __DIR__ . '/../views/all_products.php'; // Panggil view yang baru kita buat
+    }
+
     public function showHome() {
         // Ambil koneksi database global
         global $conn;

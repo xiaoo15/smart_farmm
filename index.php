@@ -61,6 +61,13 @@ switch ($action) {
     case 'orderDetails':
         $authController->showOrderDetails();
         break;
+    case 'home':
+        $homeController->showHome();
+        break;
+    
+    case 'allProducts': // <--- INI DIA ALAMAT BARUNYA
+        $homeController->showAllProducts();
+        break;
     case 'logout':
         $authController->handleLogout();
         break;
