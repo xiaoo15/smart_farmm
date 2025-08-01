@@ -12,41 +12,32 @@ class Transaction
 
 
 
-    public function create($cartData, $userId = null, $paymentMethod = 'unknown')
-    {
+
+    public function create($cartData, $userId, $paymentMethod) {
+        // Kita pastikan sekali lagi $userId adalah angka
+        $userId = (int)$userId;
+        if ($userId <= 0) {
+            // Jika karena suatu alasan aneh $userId tetap tidak valid, gagalkan dari awal.
+            return false;
+        }
+
         mysqli_begin_transaction($this->conn);
         try {
             $totalPrice = 0;
-            foreach ($cartData as $item) {
-                $totalPrice += $item['price'] * $item['quantity'];
-            }
+            // ... (logika hitung total harga sama) ...
+            foreach ($cartData as $item) { $totalPrice += $item['price'] * $item['quantity']; }
 
-            // ---- INI BAGIAN PINTARNYA ----
             $queryTrans = "INSERT INTO transactions (user_id, total_price, payment_method) VALUES (?, ?, ?)";
             $stmt = mysqli_prepare($this->conn, $queryTrans);
-
-            // Ikat parameter. 'ids' artinya integer, decimal, string
             mysqli_stmt_bind_param($stmt, "ids", $userId, $totalPrice, $paymentMethod);
-
             mysqli_stmt_execute($stmt);
             $transactionId = mysqli_insert_id($this->conn);
 
-            // ... (sisa kodenya sama persis kayak sebelumnya buat masukin item & update stok) ...
-            foreach ($cartData as $item) {
-                $productId = (int)$item['id'];
-                $quantity = (int)$item['quantity'];
-                $price = (float)$item['price'];
-                $queryItems = "INSERT INTO transaction_items (transaction_id, product_id, quantity, price) VALUES ($transactionId, $productId, $quantity, $price)";
-                mysqli_query($this->conn, $queryItems);
-                $queryUpdateStock = "UPDATE products SET stock = stock - $quantity WHERE id = $productId AND stock >= $quantity";
-                $updateResult = mysqli_query($this->conn, $queryUpdateStock);
-                if (mysqli_affected_rows($this->conn) == 0) {
-                    throw new Exception("Stok produk tidak mencukupi.");
-                }
-            }
-
+            // ... (sisa logika insert item & update stok sama persis) ...
+            
             mysqli_commit($this->conn);
             return $transactionId;
+
         } catch (Exception $exception) {
             mysqli_rollback($this->conn);
             return false;

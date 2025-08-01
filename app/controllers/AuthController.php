@@ -16,20 +16,16 @@ class AuthController {
                 $_SESSION['user'] = $user;
 
                 if ($user['role'] === 'admin') {
-                    // Jika admin, arahkan ke pintu masuk admin
+                    // ===== INI YANG DIBENERIN! ALAMATNYA SEKARANG KE 'admin/' =====
                     header('Location: admin/index.php?action=dashboard');
                 } else {
-                    // Jika customer, arahkan ke pintu masuk customer
                     header('Location: index.php?action=home');
                 }
                 exit;
             } else {
-                // Jika gagal, kembali ke form login customer
                 header('Location: index.php?action=showLogin&error=1');
                 exit;
             }
-        } else {
-            $this->showLogin();
         }
     }
 

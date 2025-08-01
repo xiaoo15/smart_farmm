@@ -179,7 +179,7 @@
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="index.php?action=myOrders"><i class="fas fa-history me-2"></i>Riwayat Pesanan</a></li>
                 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
-                    <li><a class="dropdown-item" href="public/index.php?action=dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</a></li>
+                    <li><a class="dropdown-item" href="admin/index.php?action=dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</a></li>
                 <?php endif; ?>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="index.php?action=logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
