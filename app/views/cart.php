@@ -39,7 +39,7 @@ function renderCart(cart) {
             <div class="text-center p-5 border rounded">
                 <h3>Keranjang Anda Kosong</h3>
                 <p class="text-muted">Sepertinya Anda belum menambahkan produk apapun ke keranjang.</p>
-                <a href="index.php?action=home" class="btn btn-primary mt-2">Mulai Belanja</a>
+                <a href="index.php?action=home#katalog" class="btn btn-primary mt-2">Mulai Belanja</a>
             </div>
         `;
         return;
@@ -49,7 +49,7 @@ function renderCart(cart) {
         <tr>
             <td>
                 <div class="d-flex align-items-center">
-                    <img src="images/products/${item.image_url}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3 rounded">
+                    <img src="public/images/products/${item.image_url}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;" class="me-3 rounded">
                     <div>
                         <h6 class="mb-0">${item.name}</h6>
                         <small class="text-muted">Rp ${formatRupiah(item.price)}</small>
@@ -92,7 +92,7 @@ function renderCart(cart) {
                             <span>Rp ${formatRupiah(cart.total)}</span>
                         </div>
                         <div class="d-grid mt-3">
-                            <a href="index.php?action=processCheckout" class="btn btn-success btn-lg">Lanjut ke Pembayaran</a>
+                            <a href="index.php?action=showCheckout" class="btn btn-success btn-lg">Checkout Sekarang</a>
                         </div>
                     </div>
                 </div>
@@ -134,11 +134,11 @@ function formatRupiah(angka) {
 async function updateCartBadge() {
     const response = await fetch('index.php?action=getCartData');
     const cart = await response.json();
-    const badge = document.querySelector('.nav-link .badge');
+    const badge = document.querySelector('.cart-badge');
     if (badge) {
+        badge.innerText = cart.items.length;
         if (cart.items.length > 0) {
             badge.style.display = 'inline-block';
-            badge.innerText = cart.items.length;
         } else {
             badge.style.display = 'none';
         }

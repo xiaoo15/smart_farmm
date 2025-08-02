@@ -10,6 +10,84 @@ class Product {
         $this->conn = $db;
     }
 
+    public function create($data, $files) {
+        $name = mysqli_real_escape_string($this->conn, $data['name']);
+        $kategori = mysqli_real_escape_string($this->conn, $data['kategori']);
+        $price = (int)$data['price'];
+        $stock = (int)$data['stock'];
+        
+        // Logika baru untuk menangani sumber gambar
+        $image_url = $this->handleImageSource($data, $files);
+        
+        $query = "INSERT INTO " . $this->table . " (name, kategori, price, stock, image_url) VALUES ('$name', '$kategori', '$price', '$stock', '$image_url')";
+        return mysqli_query($this->conn, $query);
+    }
+    
+    public function update($id, $data, $files) {
+        $id = (int)$id;
+        $name = mysqli_real_escape_string($this->conn, $data['name']);
+        $kategori = mysqli_real_escape_string($this->conn, $data['kategori']);
+        $price = (int)$data['price'];
+        $stock = (int)$data['stock'];
+        
+        // Cek apakah ada gambar baru yang diinput (baik file maupun URL)
+        $new_image_url = null;
+        if ((isset($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) || !empty($data['image_url'])) {
+            $this->deleteImage($id); // Hapus gambar lama dulu
+            $new_image_url = $this->handleImageSource($data, $files);
+        }
+
+        $query = "UPDATE " . $this->table . " SET name = '$name', kategori = '$kategori', price = '$price', stock = '$stock'";
+        if ($new_image_url) {
+            $query .= ", image_url = '$new_image_url'"; // Update dengan gambar baru jika ada
+        }
+        $query .= " WHERE id = $id";
+        return mysqli_query($this->conn, $query);
+    }
+    
+    // --- FUNGSI HELPER GAMBAR (KEAJAIBANNYA DI SINI) ---
+
+    private function handleImageSource($data, $files) {
+        // PRIORITAS 1: Cek apakah ada URL yang diinput
+        if (isset($data['image_source']) && $data['image_source'] === 'url' && !empty($data['image_url'])) {
+            $url = $data['image_url'];
+            // Coba "download" konten gambar dari URL
+            $imageContent = @file_get_contents($url);
+            if ($imageContent === false) {
+                return 'default.jpg'; // Gagal download, pakai default
+            }
+            
+            // Tentukan ekstensi file dari URL atau default ke .jpg
+            $ext = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+            $new_file_name = 'product_' . uniqid('', true) . '.' . $ext;
+            
+            // Simpan konten gambar ke server kita
+            if (file_put_contents($this->upload_dir . $new_file_name, $imageContent)) {
+                return $new_file_name; // Berhasil!
+            }
+        } 
+        // PRIORITAS 2: Cek apakah ada file yang diupload
+        elseif (isset($data['image_source']) && $data['image_source'] === 'upload' && isset($files['image_file']) && $files['image_file']['error'] === UPLOAD_ERR_OK) {
+            return $this->uploadImage($files); // Panggil fungsi upload yang lama
+        }
+        
+        // Jika tidak ada input baru, kembalikan null (untuk proses update) atau default (untuk create)
+        return null;
+    }
+
+    private function uploadImage($files) {
+        $file_tmp = $files['image_file']['tmp_name'];
+        $file_name = basename($files['image_file']['name']);
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        if (in_array($file_ext, $allowed_ext)) {
+            $new_file_name = 'product_' . uniqid('', true) . '.' . $file_ext;
+            if (move_uploaded_file($file_tmp, $this->upload_dir . $new_file_name)) {
+                return $new_file_name;
+            }
+        }
+        return 'default.jpg';
+    }
     // --- FUNGSI UTAMA CRUD ---
 
     public function getAll() {
@@ -22,36 +100,7 @@ class Product {
         $query = "SELECT * FROM " . $this->table . " WHERE id = $id";
         return mysqli_fetch_assoc(mysqli_query($this->conn, $query));
     }
-
-    public function create($data, $file) {
-        $name = mysqli_real_escape_string($this->conn, $data['name']);
-        $price = (int)$data['price'];
-        $stock = (int)$data['stock'];
-        $image_url = $this->uploadImage($file);
-        
-        $query = "INSERT INTO " . $this->table . " (name, price, stock, image_url) VALUES ('$name', '$price', '$stock', '$image_url')";
-        return mysqli_query($this->conn, $query);
-    }
     
-    public function update($id, $data, $file) {
-        $id = (int)$id;
-        $name = mysqli_real_escape_string($this->conn, $data['name']);
-        $price = (int)$data['price'];
-        $stock = (int)$data['stock'];
-        $image_url = '';
-
-        if (isset($file['image']) && $file['image']['error'] === UPLOAD_ERR_OK) {
-            $this->deleteImage($id);
-            $image_url = $this->uploadImage($file);
-        }
-
-        $query = "UPDATE " . $this->table . " SET name = '$name', price = '$price', stock = '$stock'";
-        if ($image_url && $image_url !== 'default.jpg') {
-            $query .= ", image_url = '$image_url'";
-        }
-        $query .= " WHERE id = $id";
-        return mysqli_query($this->conn, $query);
-    }
     
     public function delete($id) {
         $id = (int)$id;
@@ -62,25 +111,6 @@ class Product {
 
     // --- FUNGSI HELPER GAMBAR ---
 
-    private function uploadImage($file) {
-        if (isset($file['image']) && $file['image']['error'] === UPLOAD_ERR_OK) {
-            if (!is_dir($this->upload_dir) || !is_writable($this->upload_dir)) {
-                return 'default.jpg';
-            }
-            $file_tmp = $file['image']['tmp_name'];
-            $file_name = basename($file['image']['name']);
-            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
-            if (in_array($file_ext, $allowed_ext)) {
-                $new_file_name = 'product_' . uniqid('', true) . '.' . $file_ext;
-                $target_path = $this->upload_dir . $new_file_name;
-                if (move_uploaded_file($file_tmp, $target_path)) {
-                    return $new_file_name;
-                }
-            }
-        }
-        return 'default.jpg';
-    }
 
     private function deleteImage($id) {
         $product = $this->getById($id);

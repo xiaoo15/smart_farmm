@@ -13,23 +13,6 @@ class ProductController
         include __DIR__ . '/../views/products.php';
     }
 
-    public function handleCreate()
-    {
-        // --- BAGIAN INI YANG DIPERBAIKI ---
-        // Kode var_dump dan die() yang sebelumnya ada di sini sudah dihapus.
-        // Sekarang, proses akan lanjut ke validasi dan penyimpanan.
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            global $conn;
-            $productModel = new Product($conn);
-            if ($productModel->create($_POST, $_FILES)) {
-                $_SESSION['flash_message'] = "Produk berhasil ditambahkan!";
-            } else {
-                $_SESSION['flash_message'] = "GAGAL menambahkan produk. Cek izin folder 'public/images/products'.";
-            }
-        }
-        header('Location: index.php?action=products');
-        exit;
-    }
 
     public function getProductJson()
     {
@@ -47,15 +30,26 @@ class ProductController
         exit;
     }
 
+
+    public function handleCreate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            global $conn;
+            $productModel = new Product($conn);
+            if ($productModel->create($_POST, $_FILES)) { /* ... */
+            } else { /* ... */
+            }
+        }
+        header('Location: index.php?action=products');
+        exit;
+    }
     public function handleUpdate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             global $conn;
             $productModel = new Product($conn);
-            if ($productModel->update($_POST['id'], $_POST, $_FILES)) {
-                $_SESSION['flash_message'] = "Produk berhasil diperbarui!";
-            } else {
-                $_SESSION['flash_message'] = "GAGAL memperbarui produk.";
+            if ($productModel->update($_POST['id'], $_POST, $_FILES)) { /* ... */
+            } else { /* ... */
             }
         }
         header('Location: index.php?action=products');
