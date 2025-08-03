@@ -70,7 +70,6 @@ switch ($action) {
         break;
     case 'logout':
     session_destroy();
-    // Arahkan ke halaman login customer di folder utama
     header('Location: ../index.php?action=showLogin');
     exit;
     default:

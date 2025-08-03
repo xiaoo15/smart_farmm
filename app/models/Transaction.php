@@ -13,33 +13,62 @@ class Transaction
 
 
 
-    public function create($cartData, $userId, $paymentMethod) {
+    public function create($cartData, $userId, $paymentMethod)
+    {
         // Kita pastikan sekali lagi $userId adalah angka
         $userId = (int)$userId;
         if ($userId <= 0) {
-            // Jika karena suatu alasan aneh $userId tetap tidak valid, gagalkan dari awal.
-            return false;
+            return false; // Gagalkan jika user ID tidak valid
         }
 
+        // Mulai "mode aman" database
         mysqli_begin_transaction($this->conn);
-        try {
-            $totalPrice = 0;
-            // ... (logika hitung total harga sama) ...
-            foreach ($cartData as $item) { $totalPrice += $item['price'] * $item['quantity']; }
 
+        try {
+            // 1. Hitung total harga
+            $totalPrice = 0;
+            foreach ($cartData as $item) {
+                $totalPrice += $item['price'] * $item['quantity'];
+            }
+
+            // 2. Masukkan data ke tabel transactions (Folder Struk)
             $queryTrans = "INSERT INTO transactions (user_id, total_price, payment_method) VALUES (?, ?, ?)";
             $stmt = mysqli_prepare($this->conn, $queryTrans);
             mysqli_stmt_bind_param($stmt, "ids", $userId, $totalPrice, $paymentMethod);
             mysqli_stmt_execute($stmt);
             $transactionId = mysqli_insert_id($this->conn);
 
-            // ... (sisa logika insert item & update stok sama persis) ...
-            
+            // Jika gagal buat transaksi utama, langsung hentikan
+            if ($transactionId == 0) {
+                throw new Exception("Gagal mendapatkan ID transaksi.");
+            }
+
+            // --- INI BAGIAN YANG HILANG ---
+            // 3. Masukkan setiap barang ke transaction_items (Rincian Barang)
+            $queryItem = "INSERT INTO transaction_items (transaction_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+            $stmtItem = mysqli_prepare($this->conn, $queryItem);
+
+            $queryStock = "UPDATE products SET stock = stock - ? WHERE id = ?";
+            $stmtStock = mysqli_prepare($this->conn, $queryStock);
+
+            foreach ($cartData as $item) {
+                // Masukkan item
+                mysqli_stmt_bind_param($stmtItem, "iiid", $transactionId, $item['id'], $item['quantity'], $item['price']);
+                mysqli_stmt_execute($stmtItem);
+
+                // Kurangi stok
+                mysqli_stmt_bind_param($stmtStock, "ii", $item['quantity'], $item['id']);
+                mysqli_stmt_execute($stmtStock);
+            }
+            // --- BATAS BAGIAN YANG HILANG ---
+
+            // 4. Jika semua berhasil, permanenkan perubahan
             mysqli_commit($this->conn);
             return $transactionId;
-
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            // 5. Jika ada satu saja yang gagal, batalkan semua
             mysqli_rollback($this->conn);
+            error_log("Gagal membuat transaksi: " . $e->getMessage()); // Catat error
             return false;
         }
     }
@@ -102,18 +131,25 @@ class Transaction
         $transactionId = (int)$transactionId;
         $userId = (int)$userId;
 
-        // Query ini menggabungkan pengecekan ID transaksi dan ID pengguna
-        $query = "
-            SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
-            FROM transaction_items ti
-            JOIN products p ON ti.product_id = p.id
-            JOIN transactions t ON ti.transaction_id = t.id
-            WHERE ti.transaction_id = $transactionId AND t.user_id = $userId
-        ";
+        // KODE BARU YANG BENAR
+$query = "
+    SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
+    FROM transaction_items ti
+    JOIN products p ON ti.product_id = p.id
+    JOIN transactions t ON ti.transaction_id = t.id
+    WHERE ti.transaction_id = $transactionId AND t.user_id = $userId
+";
         $result = mysqli_query($this->conn, $query);
+        if (!$result) {
+            die('Query error: ' . mysqli_error($this->conn));
+        }
         $details = [];
         while ($row = mysqli_fetch_assoc($result)) {
             $details[] = $row;
+        }
+        // Debug output
+        if (empty($details)) {
+            error_log("DEBUG: Tidak ada detail transaksi untuk transaksi_id=$transactionId dan user_id=$userId");
         }
         return $details;
     }

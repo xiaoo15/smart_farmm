@@ -3,33 +3,41 @@
 
 require_once __DIR__ . '/../models/User.php';
 
-class AuthController {
-    public function showLogin() {
+class AuthController
+{
+    public function showLogin()
+    {
         include __DIR__ . '/../views/auth/login.php';
     }
 
-    public function handleLogin() {
+    public function handleLogin()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userModel = new User();
             $user = $userModel->attemptLogin($_POST['username'], $_POST['password']);
-            if ($user) {
-                $_SESSION['user'] = $user;
 
+            if ($user) {
+                $_SESSION['user'] = $user; // Simpan semua data user ke session
+
+                // --- INI DIA LOGIKA PEMBAGI JALURNYA ---
                 if ($user['role'] === 'admin') {
-                    // ===== INI YANG DIBENERIN! ALAMATNYA SEKARANG KE 'admin/' =====
+                    // Jika dia admin, tendang ke markas admin
                     header('Location: admin/index.php?action=dashboard');
                 } else {
+                    // Jika bukan (pasti customer), lempar ke halaman utama
                     header('Location: index.php?action=home');
                 }
-                exit;
+                exit; // Jangan lupa exit setelah redirect!
             } else {
+                // Kalo gagal login, kembali ke halaman login dengan pesan error
                 header('Location: index.php?action=showLogin&error=1');
                 exit;
             }
         }
     }
 
-    public function showMyOrders() {
+    public function showMyOrders()
+    {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?action=showLogin');
             exit;
@@ -59,30 +67,39 @@ class AuthController {
         $transactionModel = new Transaction($conn);
         $details = $transactionModel->getTransactionDetailsForUser($transactionId, $userId);
 
-        // Jika tidak ada detail (mungkin mencoba akses pesanan orang lain),
-        // kembalikan ke halaman riwayat pesanan.
+        // Tambahkan debug
+        if ($transactionId == 0) {
+            die("ID transaksi tidak valid.");
+        }
+        if (!$details) {
+            die("Transaksi tidak ditemukan atau bukan milik Anda.");
+        }
+
         if (empty($details)) {
             header('Location: index.php?action=myOrders&error=notfound');
             exit;
         }
 
         include __DIR__ . '/../views/order_details.php';
-    }
+    } 
 
-    public function handleLogout() {
+    public function handleLogout()
+    {
         session_destroy();
         // Selalu arahkan ke halaman login customer setelah logout
         header('Location: index.php?action=showLogin');
         exit;
     }
 
-    public function showRegisterForm() {
+    public function showRegisterForm()
+    {
         include __DIR__ . '/../views/auth/register.php';
     }
 
-    
 
-    public function handleRegister() {
+
+    public function handleRegister()
+    {
         // Validasi data
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['username']) || empty($_POST['password'])) {
             header('Location: index.php?action=showRegister');
@@ -118,6 +135,3 @@ class AuthController {
         }
     }
 }
-
-
-?>
