@@ -62,6 +62,9 @@ switch ($action) {
 
         $cartController->showCart();
         break;
+    case 'productDetail':
+        $homeController->showProductDetail();
+        break;
     case 'showCheckout': // <--- INI ROUTE BARUNYA
         $cartController->showCheckoutPage();
         break;
@@ -69,9 +72,9 @@ switch ($action) {
         $homeController->showAllProducts();
         break;
     case 'logout':
-    session_destroy();
-    header('Location: ../index.php?action=showLogin');
-    exit;
+        session_destroy();
+        header('Location: ../index.php?action=showLogin');
+        exit;
     default:
         $homeController->showHome();
         break;

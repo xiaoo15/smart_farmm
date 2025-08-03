@@ -76,10 +76,13 @@ include 'templates/public_header.php';
                 </div>
             <?php endif; ?>
         </div>
+
+        <div class="text-center mt-5">
+            <a href="index.php?action=allProducts" class="btn btn-outline-success btn-lg">Lihat Semua Produk</a>
+        </div>
+        
     </div>
 </section>
-
-
 
 <?php
 // Panggil footer yang ada "otak"-nya
