@@ -118,21 +118,13 @@ class Transaction
         return $row['total'] ?? 0;
     }
 
-    // ---- TAMBAHKAN FUNGSI BARU DI BAWAH INI ----
-    public function getTransactionsByUserId($userId)
-    {
-        $userId = (int)$userId;
-        $query = "SELECT * FROM transactions WHERE user_id = $userId ORDER BY transaction_date DESC";
-        return mysqli_query($this->conn, $query);
-    }
-
     public function getTransactionDetailsForUser($transactionId, $userId)
     {
         $transactionId = (int)$transactionId;
         $userId = (int)$userId;
 
         // KODE BARU YANG BENAR
-$query = "
+        $query = "
     SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
     FROM transaction_items ti
     JOIN products p ON ti.product_id = p.id
@@ -152,6 +144,49 @@ $query = "
             error_log("DEBUG: Tidak ada detail transaksi untuk transaksi_id=$transactionId dan user_id=$userId");
         }
         return $details;
+    }
+    public function getAllTransactionsWithUser()
+    {
+        $query = "
+            SELECT t.*, u.username 
+            FROM transactions t
+            JOIN users u ON t.user_id = u.id
+            ORDER BY t.transaction_date DESC
+        ";
+        $result = mysqli_query($this->conn, $query);
+        $transactions = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $transactions[] = $row;
+        }
+        return $transactions;
+    }
+
+    /**
+     * FUNGSI BARU: Untuk update status pesanan.
+     */
+    public function updateStatus($transactionId, $newStatus)
+    {
+        $id = (int)$transactionId;
+        // Kita pakai prepared statement biar aman dari SQL Injection
+        $stmt = $this->conn->prepare("UPDATE transactions SET payment_status = ? WHERE id = ?");
+        $stmt->bind_param("si", $newStatus, $id);
+        return $stmt->execute();
+    }
+    public function getTransactionsByUserId($userId)
+    {
+        $userId = (int)$userId;
+        $query = "SELECT * FROM transactions WHERE user_id = ? ORDER BY transaction_date DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $transactions = [];
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+        return $transactions;
     }
 
     public function getWeeklySalesData()

@@ -1,9 +1,10 @@
 <?php
-// File: app/models/User.php (VERSI FINAL)
+// File: app/models/User.php (VERSI DENGAN TRIK BARU)
 
 require_once __DIR__ . '/../../config/database.php';
 
 class User {
+
     public function attemptLogin($username, $password) {
         global $conn;
         $username = mysqli_real_escape_string($conn, $username);
@@ -30,7 +31,6 @@ class User {
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // ===== INI YANG DIBENERIN! ROLE-NYA SEKARANG 'customer' =====
         $sql = "INSERT INTO users (username, password, role) VALUES ('$username', '$hashedPassword', 'customer')";
         
         if (mysqli_query($conn, $sql)) {
@@ -38,5 +38,22 @@ class User {
         } else {
             return 'fail';
         }
+    }
+
+    /**
+     * INI DIA TRIK BARUNYA!
+     * Fungsi untuk mengambil semua user yang role-nya 'customer'.
+     */
+    public function getAllCustomers() {
+        global $conn;
+        // Kita cuma ambil data yang perlu, password JANGAN diambil demi keamanan
+        $sql = "SELECT id, username, role FROM users WHERE role = 'customer' ORDER BY id DESC";
+        $result = mysqli_query($conn, $sql);
+        
+        $customers = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $customers[] = $row;
+        }
+        return $customers;
     }
 }

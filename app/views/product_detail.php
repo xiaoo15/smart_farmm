@@ -17,17 +17,21 @@ include 'templates/public_header.php';
     </div>
 </div>
 
-<div class="container my-5 pt-5">
+<div class="container my-5 pt-4">
+    <div class="mb-4">
+        <a href="index.php?action=allProducts" class="btn btn-light border shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i> Kembali ke Katalog
+        </a>
+    </div>
+
     <?php if (isset($product) && $product): ?>
         <div class="row">
-            <!-- Bagian Kiri: Galeri Gambar -->
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <div class="card border-0 shadow-sm mb-2">
                     <img src="public/images/products/<?= htmlspecialchars($product['image_url']) ?>" class="card-img-top img-fluid rounded-4" alt="Gambar Produk Utama">
                 </div>
             </div>
 
-            <!-- Bagian Kanan: Info & Aksi -->
             <div class="col-lg-7">
                 <h1 class="h2 mb-3 fw-bold"><?= htmlspecialchars($product['name']) ?></h1>
 
@@ -46,11 +50,9 @@ include 'templates/public_header.php';
                 <div class="mb-4">
                     <p class="mb-2 fw-bold">Deskripsi Singkat</p>
                     <p class="text-muted">
-                        <!-- Kamu bisa tambahkan kolom 'deskripsi' di database nanti -->
                         Ini adalah deskripsi singkat produk. Untuk detail lengkap, silakan lihat di bawah. Tanaman ini dijamin segar dan dirawat dengan metode smart farming terbaik.
                     </p>
                 </div>
-
                 <div class="d-flex flex-column flex-sm-row">
                     <?php
                     $isStokHabis = ($product['stock'] <= 0);

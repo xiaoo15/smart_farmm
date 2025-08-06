@@ -106,7 +106,7 @@ include 'templates/public_footer.php';
     .filter-nav .nav-link.active,
     .filter-nav .nav-link:hover {
         color: #fff;
-        background-color: #28a745;
+        background-color: #fff;
         border-color: #28a745;
         transform: translateY(-3px);
         box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);

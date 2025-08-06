@@ -54,11 +54,17 @@ include 'templates/public_header.php';
                 ?>
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="card h-100 product-card">
-                            <div class="img-container">
+                            
+                            <a href="index.php?action=productDetail&id=<?= $product['id'] ?>" class="img-container">
                                 <img src="public/images/products/<?= htmlspecialchars($product['image_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
-                            </div>
+                            </a>
+                            
                             <div class="card-body d-flex flex-column">
-                                <h5 class="product-title"><?= htmlspecialchars($product['name']) ?></h5>
+                                <h5 class="product-title">
+                                    <a href="index.php?action=productDetail&id=<?= $product['id'] ?>" class="text-dark text-decoration-none">
+                                        <?= htmlspecialchars($product['name']) ?>
+                                    </a>
+                                </h5>
                                 <p class="product-price mb-3">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
                                 <div class="mt-auto">
                                     <button class="btn <?= $tombolClass ?> w-100 add-to-cart-btn fw-semibold" data-id="<?= $product['id'] ?>" <?= $tombolDisabled ?>><?= $tombolTeks ?></button>
