@@ -19,7 +19,6 @@ require_once '../app/controllers/PosController.php';
 require_once '../app/controllers/ReportController.php';
 require_once '../app/controllers/OrderController.php';
 require_once '../app/controllers/CustomerController.php';
-// AuthController tidak perlu dipanggil di sini lagi
 
 // Inisialisasi controller
 $dashboardController = new DashboardController();
@@ -66,6 +65,12 @@ switch ($action) {
         break;
     case 'orders':
         $orderController->showOrders();
+        break;
+    case 'showPayment':
+        $paymentController->showPaymentPage();
+        break;
+    case 'handlePaymentProof':
+        $paymentController->handlePaymentProof();
         break;
     case 'customerDetail':
         $customerController->showCustomerDetail();

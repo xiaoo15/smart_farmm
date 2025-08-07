@@ -1,7 +1,7 @@
 <nav class="sidebar">
     <div class="sidebar-header">
         <i class="fas fa-leaf icon me-2"></i>
-        <h3>SmartFarm</h3>
+        <h3>GrowFarm</h3>
     </div>
 
     <ul class="list-unstyled components">
@@ -28,13 +28,11 @@
         </li>
     </ul>
 
-    <div class="sidebar-footer">
-        <div class="d-flex align-items-center">
-             <img src="https://github.com/mdo.png" alt="Admin" width="40" height="40" class="rounded-circle me-2">
-             <div>
-                <strong class="d-block"><?= $_SESSION['user']['username'] ?? 'Admin' ?></strong>
-                <a href="index.php?action=logout" class="text-danger small">Logout</a>
-             </div>
+    <ul class="list-unstyled CTAs">
+        <div class="px-3">
+             <hr>
+             <strong><?= $_SESSION['user']['username'] ?? 'Admin' ?></strong><br>
+             <a href="index.php?action=logout" class="btn btn-sm btn-outline-danger mt-2 w-100">Logout</a>
         </div>
-    </div>
+    </ul>
 </nav>

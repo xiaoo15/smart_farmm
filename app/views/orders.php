@@ -1,19 +1,23 @@
 <?php
-// File: app/views/orders.php (FILE BARU!)
+// File: app/views/orders.php (VERSI DENGAN KONFIRMASI)
 $title = "Manajemen Pesanan";
 global $action;
 ?>
 
 <div class="admin-wrapper">
     <?php include 'templates/sidebar.php'; ?>
-        <?php include 'templates/header.php'; ?>
 
     <div class="content-wrapper">
+        <?php include 'templates/header.php'; ?>
         <main class="p-4">
             <h1 class="h2 mb-4">Manajemen Pesanan</h1>
 
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-body">
+                    <div id="status-update-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        Status pesanan berhasil diperbarui!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
@@ -36,8 +40,9 @@ global $action;
                                         <td class="text-end">Rp<?= number_format($trx['total_price'], 0, ',', '.') ?></td>
                                         <td class="text-center"><span class="badge bg-info text-dark"><?= htmlspecialchars($trx['payment_method']) ?></span></td>
                                         <td class="text-center">
-                                            <select class="form-select form-select-sm status-dropdown" data-id="<?= $trx['id'] ?>">
+                                            <select class="form-select form-select-sm status-dropdown" data-id="<?= $trx['id'] ?>" data-current-status="<?= $trx['payment_status'] ?>">
                                                 <option value="Menunggu Pembayaran" <?= $trx['payment_status'] == 'Menunggu Pembayaran' ? 'selected' : '' ?>>Menunggu Pembayaran</option>
+                                                <option value="Menunggu Konfirmasi" <?= $trx['payment_status'] == 'Menunggu Konfirmasi' ? 'selected' : '' ?>>Menunggu Konfirmasi</option>
                                                 <option value="Diproses" <?= $trx['payment_status'] == 'Diproses' ? 'selected' : '' ?>>Diproses</option>
                                                 <option value="Dikirim" <?= $trx['payment_status'] == 'Dikirim' ? 'selected' : '' ?>>Dikirim</option>
                                                 <option value="Selesai" <?= $trx['payment_status'] == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
@@ -60,33 +65,58 @@ global $action;
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const statusAlert = document.getElementById('status-update-alert');
+
             document.querySelectorAll('.status-dropdown').forEach(dropdown => {
-                dropdown.addEventListener('change', async function() {
+                dropdown.addEventListener('change', function() {
                     const transactionId = this.dataset.id;
                     const newStatus = this.value;
+                    const oldStatus = this.dataset.currentStatus;
+                    const dropdownElement = this; // Simpan elemen dropdown
 
-                    try {
-                        const response = await fetch('index.php?action=updateOrderStatus', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `id=${transactionId}&status=${newStatus}`
-                        });
+                    // =======================================
+                    // INI DIA KONFIRMASINYA!
+                    // =======================================
+                    const confirmation = confirm(`Anda yakin ingin mengubah status pesanan #${transactionId} dari "${oldStatus}" menjadi "${newStatus}"?`);
 
-                        const result = await response.json();
-                        if (result.success) {
-                            // Mungkin tambahkan notifikasi sukses di sini
-                            console.log("Status berhasil diupdate!");
-                        } else {
-                            alert('Gagal mengupdate status: ' + result.message);
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat menghubungi server.');
+                    if (confirmation) {
+                        // Jika admin klik "OK", lanjutkan proses
+                        updateStatus(transactionId, newStatus, dropdownElement);
+                    } else {
+                        // Jika admin klik "Cancel", kembalikan dropdown ke status semula
+                        this.value = oldStatus;
                     }
                 });
             });
+
+            async function updateStatus(transactionId, newStatus, dropdownElement) {
+                try {
+                    const response = await fetch('index.php?action=updateOrderStatus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `id=${transactionId}&status=${newStatus}`
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        // Tampilkan notifikasi sukses
+                        statusAlert.style.display = 'block';
+                        // Update status saat ini di elemen dropdown
+                        dropdownElement.dataset.currentStatus = newStatus;
+                        // Sembunyikan notifikasi setelah beberapa detik
+                        setTimeout(() => { statusAlert.style.display = 'none'; }, 3000);
+                    } else {
+                        alert('Gagal mengupdate status: ' + result.message);
+                        dropdownElement.value = dropdownElement.dataset.currentStatus; // Kembalikan jika gagal
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghubungi server.');
+                    dropdownElement.value = dropdownElement.dataset.currentStatus; // Kembalikan jika error
+                }
+            }
         });
         </script>
     </div>

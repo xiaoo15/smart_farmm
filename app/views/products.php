@@ -1,10 +1,10 @@
 <?php
-// File: app/views/products.php (VERSI URL GAMBAR)
+// File: app/views/products.php (VERSI FINAL DENGAN DESAIN & FUNGSI LENGKAP)
 $title = "Manajemen Produk";
 global $action;
 ?>
 
-<div class="d-flex">
+<div class="admin-wrapper">
     <?php include 'templates/sidebar.php'; ?>
     <div class="flex-grow-1">
         <?php include 'templates/header.php'; ?>
@@ -13,15 +13,17 @@ global $action;
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Manajemen Produk</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="fas fa-plus"></i> Tambah Produk Baru</button>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="fas fa-plus me-2"></i>Tambah Produk Baru</button>
                 </div>
             </div>
+
             <?php if (isset($_SESSION['flash_message'])): ?>
             <div class="alert alert-info alert-dismissible fade show" role="alert">
                 <?= $_SESSION['flash_message']; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <?php unset($_SESSION['flash_message']); endif; ?>
+
             <div class="table-responsive">
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
@@ -46,7 +48,7 @@ global $action;
                             </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="7" class="text-center">Belum ada produk.</td></tr>
+                            <tr><td colspan="7" class="text-center p-4">Belum ada produk. Silakan tambahkan produk baru.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -58,35 +60,29 @@ global $action;
 
 
 <div class="modal fade" id="addProductModal" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header"><h5 class="modal-title">Tambah Produk Baru</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
       <form action="index.php?action=createProduct" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
-            <div class="mb-3"><label for="name" class="form-label">Nama Produk</label><input type="text" class="form-control" name="name" required></div>
-            <div class="mb-3"><label for="kategori" class="form-label">Kategori</label><select class="form-select" name="kategori" required><option value="" disabled selected>-- Pilih Kategori --</option><option value="kit">Smart Kit</option><option value="panen">Hasil Panen</option><option value="bibit">Bibit</option><option value="alat">Peralatan</option><option value="lainnya">Lainnya</option></select></div>
-            <div class="mb-3"><label for="price" class="form-label">Harga</label><input type="number" class="form-control" name="price" required></div>
-            <div class="mb-3"><label for="stock" class="form-label">Stok Awal</label><input type="number" class="form-control" name="stock" required></div>
-            
+            <div class="row">
+                <div class="col-md-8"><div class="mb-3"><label for="name" class="form-label">Nama Produk</label><input type="text" class="form-control" name="name" required></div></div>
+                <div class="col-md-4"><div class="mb-3"><label for="kategori" class="form-label">Kategori</label><select class="form-select" name="kategori" required><option value="" disabled selected>-- Pilih --</option><option value="kit">Smart Kit</option><option value="panen">Hasil Panen</option><option value="bibit">Bibit</option><option value="alat">Peralatan</option><option value="lainnya">Lainnya</option></select></div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><div class="mb-3"><label for="price" class="form-label">Harga</label><input type="number" class="form-control" name="price" required></div></div>
+                <div class="col-md-6"><div class="mb-3"><label for="stock" class="form-label">Stok Awal</label><input type="number" class="form-control" name="stock" required></div></div>
+            </div>
+            <div class="mb-3"><label for="short_description" class="form-label">Deskripsi Singkat (Max 255 karakter)</label><input type="text" class="form-control" name="short_description" placeholder="Cth: Bibit unggul dengan tingkat keberhasilan 99%"></div>
+            <div class="mb-3"><label for="description" class="form-label">Deskripsi Lengkap</label><textarea class="form-control" name="description" rows="4" placeholder="Jelaskan semua keunggulan produkmu di sini..."></textarea></div>
             <hr>
             <label class="form-label">Sumber Gambar</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="image_source" id="source_upload_add" value="upload" checked>
-                <label class="form-check-label" for="source_upload_add">Upload File</label>
-            </div>
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="image_source" id="source_url_add" value="url">
-                <label class="form-check-label" for="source_url_add">Gunakan URL</label>
-            </div>
-            
-            <div id="upload_field_add" class="mb-3">
-                <input class="form-control" type="file" name="image_file">
-            </div>
-            <div id="url_field_add" class="mb-3" style="display: none;">
-                <input type="text" class="form-control" name="image_url" placeholder="https://... tempel URL gambar di sini">
-            </div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="image_source" id="source_upload_add" value="upload" checked><label class="form-check-label" for="source_upload_add">Upload File</label></div>
+            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="image_source" id="source_url_add" value="url"><label class="form-check-label" for="source_url_add">Gunakan URL</label></div>
+            <div id="upload_field_add" class="mb-3"><input class="form-control" type="file" name="image_file"></div>
+            <div id="url_field_add" class="mb-3" style="display: none;"><input type="text" class="form-control" name="image_url" placeholder="https://... tempel URL gambar di sini"></div>
         </div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="submit" class="btn btn-primary">Simpan Produk</button></div>
       </form>
     </div>
   </div>
@@ -94,36 +90,29 @@ global $action;
 
 
 <div class="modal fade" id="editProductModal" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header"><h5 class="modal-title">Edit Produk</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
       <form id="edit-form" action="index.php?action=updateProduct" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
             <input type="hidden" id="edit-id" name="id">
-            <div class="mb-3"><label for="edit-name" class="form-label">Nama Produk</label><input type="text" class="form-control" id="edit-name" name="name" required></div>
-            <div class="mb-3"><label for="edit-kategori" class="form-label">Kategori</label><select class="form-select" id="edit-kategori" name="kategori" required><option value="kit">Smart Kit</option><option value="panen">Hasil Panen</option><option value="bibit">Bibit</option><option value="alat">Peralatan</option><option value="lainnya">Lainnya</option></select></div>
-            <div class="mb-3"><label for="edit-price" class="form-label">Harga</label><input type="number" class="form-control" id="edit-price" name="price" required></div>
-            <div class="mb-3"><label for="edit-stock" class="form-label">Stok</label><input type="number" class="form-control" id="edit-stock" name="stock" required></div>
-            
+            <div class="row">
+                <div class="col-md-8"><div class="mb-3"><label for="edit-name" class="form-label">Nama Produk</label><input type="text" class="form-control" id="edit-name" name="name" required></div></div>
+                <div class="col-md-4"><div class="mb-3"><label for="edit-kategori" class="form-label">Kategori</label><select class="form-select" id="edit-kategori" name="kategori" required><option value="kit">Smart Kit</option><option value="panen">Hasil Panen</option><option value="bibit">Bibit</option><option value="alat">Peralatan</option><option value="lainnya">Lainnya</option></select></div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><div class="mb-3"><label for="edit-price" class="form-label">Harga</label><input type="number" class="form-control" id="edit-price" name="price" required></div></div>
+                <div class="col-md-6"><div class="mb-3"><label for="edit-stock" class="form-label">Stok</label><input type="number" class="form-control" id="edit-stock" name="stock" required></div></div>
+            </div>
+            <div class="mb-3"><label for="edit-short_description" class="form-label">Deskripsi Singkat</label><input type="text" class="form-control" id="edit-short_description" name="short_description"></div>
+            <div class="mb-3"><label for="edit-description" class="form-label">Deskripsi Lengkap</label><textarea class="form-control" id="edit-description" name="description" rows="4"></textarea></div>
             <hr>
             <label class="form-label">Ganti Gambar (Opsional)</label><br>
             <img id="edit-current-image" src="" alt="Gambar Produk" width="100" class="mb-2 rounded">
-            
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="image_source" id="source_upload_edit" value="upload" checked>
-                <label class="form-check-label" for="source_upload_edit">Upload File Baru</label>
-            </div>
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="image_source" id="source_url_edit" value="url">
-                <label class="form-check-label" for="source_url_edit">Gunakan URL Baru</label>
-            </div>
-
-            <div id="upload_field_edit" class="mb-3">
-                <input class="form-control" type="file" name="image_file">
-            </div>
-            <div id="url_field_edit" class="mb-3" style="display: none;">
-                <input type="text" class="form-control" name="image_url" placeholder="https://... tempel URL gambar baru di sini">
-            </div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="image_source" id="source_upload_edit" value="upload" checked><label class="form-check-label" for="source_upload_edit">Upload File Baru</label></div>
+            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="image_source" id="source_url_edit" value="url"><label class="form-check-label" for="source_url_edit">Gunakan URL Baru</label></div>
+            <div id="upload_field_edit" class="mb-3"><input class="form-control" type="file" name="image_file"></div>
+            <div id="url_field_edit" class="mb-3" style="display: none;"><input type="text" class="form-control" name="image_url" placeholder="https://... tempel URL gambar baru di sini"></div>
         </div>
         <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="submit" class="btn btn-primary">Simpan Perubahan</button></div>
       </form>
@@ -133,7 +122,6 @@ global $action;
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Fungsi untuk gonta-ganti input di Modal Tambah
     const addRadios = document.querySelectorAll('input[name="image_source"][id$="_add"]');
     addRadios.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -142,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Fungsi untuk gonta-ganti input di Modal Edit
     const editRadios = document.querySelectorAll('input[name="image_source"][id$="_edit"]');
     editRadios.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -151,9 +138,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Fungsi untuk mengisi data di Modal Edit (seperti sebelumnya)
     const editModal = document.getElementById('editProductModal');
-    if(editModal) {
+    if (editModal) {
         editModal.addEventListener('show.bs.modal', async (event) => {
             const product = await fetch(`index.php?action=getProduct&id=${event.relatedTarget.dataset.id}`).then(res => res.json());
             document.getElementById('edit-id').value = product.id;
@@ -161,6 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('edit-kategori').value = product.kategori;
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-stock').value = product.stock;
+            document.getElementById('edit-short_description').value = product.short_description;
+            document.getElementById('edit-description').value = product.description;
             document.getElementById('edit-current-image').src = `../public/images/products/${product.image_url}`;
         });
     }

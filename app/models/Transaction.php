@@ -43,7 +43,7 @@ class Transaction
                 throw new Exception("Gagal mendapatkan ID transaksi.");
             }
 
-            // --- INI BAGIAN YANG HILANG ---
+            // --- INI BAGIAN YANG HILANG & DIBENERIN ---
             // 3. Masukkan setiap barang ke transaction_items (Rincian Barang)
             $queryItem = "INSERT INTO transaction_items (transaction_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
             $stmtItem = mysqli_prepare($this->conn, $queryItem);
@@ -60,7 +60,7 @@ class Transaction
                 mysqli_stmt_bind_param($stmtStock, "ii", $item['quantity'], $item['id']);
                 mysqli_stmt_execute($stmtStock);
             }
-            // --- BATAS BAGIAN YANG HILANG ---
+            // --- BATAS BAGIAN YANG DIBENERIN ---
 
             // 4. Jika semua berhasil, permanenkan perubahan
             mysqli_commit($this->conn);
@@ -68,7 +68,7 @@ class Transaction
         } catch (Exception $e) {
             // 5. Jika ada satu saja yang gagal, batalkan semua
             mysqli_rollback($this->conn);
-            error_log("Gagal membuat transaksi: " . $e->getMessage()); // Catat error
+            error_log("Gagal membuat transaksi: " . $e->getMessage()); // Catat error buat kita liat nanti
             return false;
         }
     }
@@ -117,7 +117,44 @@ class Transaction
         $row = mysqli_fetch_assoc($result);
         return $row['total'] ?? 0;
     }
+    public function getRecentTransactions($limit = 5)
+    {
+        $limit = (int)$limit;
+        $query = "
+            SELECT t.id, t.total_price, u.username
+            FROM transactions t
+            JOIN users u ON t.user_id = u.id
+            ORDER BY t.transaction_date DESC
+            LIMIT ?
+        ";
 
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $transactions = [];
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+        return $transactions;
+    }
+
+    public function updatePaymentProof($transactionId, $proofFileName)
+    {
+        $id = (int)$transactionId;
+        // Status baru setelah bukti di-upload
+        $newStatus = 'Menunggu Konfirmasi';
+
+        // Kita pakai prepared statement biar super aman
+        $stmt = $this->conn->prepare(
+            "UPDATE transactions SET payment_proof = ?, payment_status = ? WHERE id = ?"
+        );
+        // "ssi" artinya tipe datanya string, string, integer
+        $stmt->bind_param("ssi", $proofFileName, $newStatus, $id);
+
+        return $stmt->execute();
+    }
     public function getTransactionDetailsForUser($transactionId, $userId)
     {
         $transactionId = (int)$transactionId;
@@ -125,34 +162,44 @@ class Transaction
 
         // KODE BARU YANG BENAR
         $query = "
-    SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
-    FROM transaction_items ti
-    JOIN products p ON ti.product_id = p.id
-    JOIN transactions t ON ti.transaction_id = t.id
-    WHERE ti.transaction_id = $transactionId AND t.user_id = $userId
-";
-        $result = mysqli_query($this->conn, $query);
-        if (!$result) {
-            die('Query error: ' . mysqli_error($this->conn));
-        }
+            SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
+            FROM transaction_items ti
+            JOIN products p ON ti.product_id = p.id
+            JOIN transactions t ON ti.transaction_id = t.id
+            WHERE ti.transaction_id = ? AND t.user_id = ?
+        ";
+
+        $stmt = mysqli_prepare($this->conn, $query);
+        mysqli_stmt_bind_param($stmt, "ii", $transactionId, $userId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
         $details = [];
         while ($row = mysqli_fetch_assoc($result)) {
             $details[] = $row;
         }
-        // Debug output
-        if (empty($details)) {
-            error_log("DEBUG: Tidak ada detail transaksi untuk transaksi_id=$transactionId dan user_id=$userId");
-        }
         return $details;
+    }
+
+
+
+    public function getTransactionForUser($transactionId, $userId)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM transactions WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("ii", $transactionId, $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
     public function getAllTransactionsWithUser()
     {
+        // Pastikan `t.payment_proof` ada di dalam SELECT
         $query = "
-            SELECT t.*, u.username 
-            FROM transactions t
-            JOIN users u ON t.user_id = u.id
-            ORDER BY t.transaction_date DESC
-        ";
+        SELECT t.*, u.username 
+        FROM transactions t
+        JOIN users u ON t.user_id = u.id
+        ORDER BY t.transaction_date DESC
+    ";
         $result = mysqli_query($this->conn, $query);
         $transactions = [];
         while ($row = mysqli_fetch_assoc($result)) {

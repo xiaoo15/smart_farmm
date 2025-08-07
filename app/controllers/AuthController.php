@@ -64,22 +64,20 @@ class AuthController
         $userId = $_SESSION['user']['id'];
 
         global $conn;
+        // Kita butuh Transaction.php di sini!
+        require_once __DIR__ . '/../models/Transaction.php';
         $transactionModel = new Transaction($conn);
+        
         $details = $transactionModel->getTransactionDetailsForUser($transactionId, $userId);
 
-        // Tambahkan debug
-        if ($transactionId == 0) {
-            die("ID transaksi tidak valid.");
-        }
-        if (!$details) {
-            die("Transaksi tidak ditemukan atau bukan milik Anda.");
-        }
-
+        // Jika detailnya kosong (mungkin karena ID-nya salah atau bukan pesanan dia)
         if (empty($details)) {
+            // Jangan pake die(), nanti user bingung. Lempar aja ke halaman riwayat.
             header('Location: index.php?action=myOrders&error=notfound');
             exit;
         }
 
+        // Kirim data ke view
         include __DIR__ . '/../views/order_details.php';
     } 
 
