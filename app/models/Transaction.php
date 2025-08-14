@@ -181,7 +181,29 @@ class Transaction
         return $details;
     }
 
+    public function getBestSellingProducts($limit = 5)
+    {
+        $limit = (int)$limit;
+        $query = "
+            SELECT p.name, SUM(ti.quantity) as total_sold
+            FROM transaction_items ti
+            JOIN products p ON ti.product_id = p.id
+            GROUP BY ti.product_id, p.name
+            ORDER BY total_sold DESC
+            LIMIT ?
+        ";
 
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $products = [];
+        while ($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+        return $products;
+    }
 
     public function getTransactionForUser($transactionId, $userId)
     {

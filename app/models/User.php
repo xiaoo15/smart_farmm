@@ -3,9 +3,11 @@
 
 require_once __DIR__ . '/../../config/database.php';
 
-class User {
+class User
+{
 
-    public function attemptLogin($username, $password) {
+    public function attemptLogin($username, $password)
+    {
         global $conn;
         $username = mysqli_real_escape_string($conn, $username);
         $sql = "SELECT * FROM users WHERE username = '$username'";
@@ -19,10 +21,11 @@ class User {
         return false;
     }
 
-    public function register($username, $password) {
+    public function register($username, $password)
+    {
         global $conn;
         $username = mysqli_real_escape_string($conn, $username);
-        
+
         $checkUserSql = "SELECT id FROM users WHERE username = '$username'";
         $result = mysqli_query($conn, $checkUserSql);
         if (mysqli_num_rows($result) > 0) {
@@ -32,7 +35,7 @@ class User {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO users (username, password, role) VALUES ('$username', '$hashedPassword', 'customer')";
-        
+
         if (mysqli_query($conn, $sql)) {
             return 'success';
         } else {
@@ -40,16 +43,35 @@ class User {
         }
     }
 
+    public function getRecentCustomers($limit = 5)
+    {
+        global $conn; // Gunakan koneksi global
+        $limit = (int)$limit;
+        $sql = "SELECT id, username FROM users WHERE role = 'customer' ORDER BY id DESC LIMIT ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $customers = [];
+        while ($row = $result->fetch_assoc()) {
+            $customers[] = $row;
+        }
+        return $customers;
+    }
+
     /**
      * INI DIA TRIK BARUNYA!
      * Fungsi untuk mengambil semua user yang role-nya 'customer'.
      */
-    public function getAllCustomers() {
+    public function getAllCustomers()
+    {
         global $conn;
         // Kita cuma ambil data yang perlu, password JANGAN diambil demi keamanan
         $sql = "SELECT id, username, role FROM users WHERE role = 'customer' ORDER BY id DESC";
         $result = mysqli_query($conn, $sql);
-        
+
         $customers = [];
         while ($row = mysqli_fetch_assoc($result)) {
             $customers[] = $row;
