@@ -1,50 +1,146 @@
 <?php
-// File: app/views/auth/login.php
-$title = "Login Admin"; // Variabel ini akan ditangkap oleh header.php
-include __DIR__ . '/../templates/header.php'; // Panggil template header
+// File: app/views/auth/login.php (VERSI DENGAN QR CODE)
+$title = "Login ke SmartFarm";
+include __DIR__ . '/../templates/public_header.php';
 ?>
 
-<div class="container">
-    <div class="row login-container">
-        <div class="col-md-5 col-lg-4 mx-auto">
-            <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-body p-4 p-sm-5">
-                    <h5 class="card-title text-center mb-4 fw-bold fs-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-tree-fill me-2" viewBox="0 0 16 16" style="color: var(--primary-green);">
-                            <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z" />
-                        </svg>
-                        SmartFarm Login
-                    </h5>
+<style>
+    body {
+        background: linear-gradient(135deg, #e9f5e9 0%, #f8f9fa 100%);
+    }
 
-                    <?php if (isset($_GET['error'])): ?>
-                        <div class="alert alert-danger" role="alert">
-                            Username atau password salah!
-                        </div>
-                    <?php endif; ?>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
 
-                    <form action="index.php?action=login" method="POST">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
-                            <label for="username">Username</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                            <label for="password">Password</label>
-                        </div>
-                        <div class="d-grid">
-                            <button class="btn btn-primary btn-lg fw-bold" type="submit">Login</button>
-                        </div>
-                        <div class="text-center mt-3">
-                            <a class="small" href="index.php?action=showRegister">Belum punya akun? Daftar di sini!</a>
-                        </div>
-                    </form>
-                    </form>
-                </div>
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        max-width: 900px;
+        width: 100%;
+    }
+    
+    /* ===== INI DIA BAGIAN BARUNYA! ===== */
+    .login-qr-section {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .login-qr-section img {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 15px;
+        max-width: 200px;
+        width: 100%;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    /* ==================================== */
+
+    .login-form-section {
+        padding: 3rem;
+        background-color: #ffffff;
+        flex: 1;
+    }
+
+    .form-floating > .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+    }
+
+    .btn-login-submit {
+        background-color: #28a745;
+        border-color: #28a745;
+        font-weight: 600;
+        padding: 12px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+    .btn-login-submit:hover {
+        background-color: #218838;
+        border-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    @media (max-width: 767.98px) {
+        .login-qr-section {
+            display: none; /* Sembunyikan QR di HP biar nggak menuhin layar */
+        }
+        .login-card {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-qr-section">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://github.com/xiaoo15&bgcolor=ffffff&color=28a745&qzone=2" alt="QR Code Login">
+            <h4 class="fw-bold">Login via Aplikasi?</h4>
+            <p class="small">Scan QR code di atas untuk masuk lebih cepat melalui aplikasi mobile SmartFarm.</p>
+        </div>
+
+        <div class="login-form-section">
+            <div class="text-center mb-4">
+                <a class="navbar-brand fs-3" href="index.php?action=home">
+                    <i class="fas fa-leaf text-success me-2"></i>
+                    SmartFarm
+                </a>
+                <p class="text-muted mt-2">Selamat datang kembali!</p>
             </div>
-            <p class="text-center mt-3 text-muted">© 2025 SmartFarm by Revan</p>
+
+            <?php if (isset($_SESSION['flash_message'])): ?>
+                <div class="alert alert-<?= $_SESSION['flash_message_type'] ?? 'success' ?> mb-3">
+                    <?= $_SESSION['flash_message']; ?>
+                </div>
+            <?php 
+                unset($_SESSION['flash_message']); 
+                unset($_SESSION['flash_message_type']); 
+            endif; 
+            ?>
+            
+            <?php if (isset($_GET['error'])): ?>
+                <div class="alert alert-danger mb-3">
+                    Username atau password salah!
+                </div>
+            <?php endif; ?>
+
+            <form action="index.php?action=login" method="POST">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-primary btn-login-submit" type="submit">Login</button>
+                </div>
+                <div class="text-center mt-3">
+                    <small>Belum punya akun? <a href="index.php?action=showRegister">Daftar di sini!</a></small>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<?php include __DIR__ . '/../templates/footer.php'; // Panggil template footer 
+<?php 
+// Panggil public_footer karena ini halaman customer
+include __DIR__ . '/../templates/public_footer.php'; 
 ?>

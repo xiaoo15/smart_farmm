@@ -10,7 +10,8 @@ class CartController
      * Helper function sakti yang jadi satpam utama kita.
      * Dia akan mengusir siapapun yang belum login.
      */
-    private function forceLogin($isAjax = false) {
+    private function forceLogin($isAjax = false)
+    {
         if (!isset($_SESSION['user'])) {
             if ($isAjax) {
                 // Kalau yang minta JavaScript (AJAX), kirim sinyal rahasia
@@ -30,7 +31,8 @@ class CartController
     /**
      * Halaman keranjang sekarang dijaga ketat.
      */
-    public function showCart() {
+    public function showCart()
+    {
         $this->forceLogin();
         include __DIR__ . '/../views/cart.php';
     }
@@ -38,7 +40,8 @@ class CartController
     /**
      * Halaman checkout juga dijaga super ketat.
      */
-    public function showCheckoutPage() {
+    public function showCheckoutPage()
+    {
         $this->forceLogin();
         // Kalau keranjang kosong, nggak boleh checkout juga
         if (empty($_SESSION['cart'])) {
@@ -53,7 +56,8 @@ class CartController
     /**
      * Proses checkout dijaga berlapis-lapis.
      */
-    public function processCheckout() {
+    public function processCheckout()
+    {
         $this->forceLogin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['payment_method']) || empty($_SESSION['cart'])) {
@@ -62,9 +66,6 @@ class CartController
         }
 
         $userId = $_SESSION['user']['id'];
-        if (empty($userId)) {
-             die("FATAL ERROR: User ID tidak ditemukan di session saat checkout.");
-        }
 
         global $conn;
         $transactionModel = new Transaction($conn);
@@ -72,18 +73,22 @@ class CartController
 
         $paymentMethod = $_POST['payment_method'];
         $cartData = [];
-        
+
         $product_ids = array_keys($_SESSION['cart']);
         $products_in_cart = $productModel->getProductsByIds($product_ids);
         foreach ($products_in_cart as $product) {
-            $cartData[] = [ 'id' => $product['id'], 'price' => $product['price'], 'quantity' => $_SESSION['cart'][$product['id']] ];
+            $cartData[] = ['id' => $product['id'], 'price' => $product['price'], 'quantity' => $_SESSION['cart'][$product['id']]];
         }
 
         $transactionId = $transactionModel->create($cartData, $userId, $paymentMethod);
 
         if ($transactionId) {
-            unset($_SESSION['cart']);
-            header('Location: index.php?action=orderDetails&id=' . $transactionId . '&status=success');
+            unset($_SESSION['cart']); // Keranjang tetap dikosongkan
+
+            // ==========================================================
+            // INI DIA PERUBAHANNYA! TUJUAN ROKET SEKARANG BERBEDA!
+            // ==========================================================
+            header('Location: index.php?action=showPayment&id=' . $transactionId);
             exit;
         } else {
             $_SESSION['flash_message'] = "Gagal memproses transaksi. Stok mungkin tidak cukup.";
@@ -95,7 +100,8 @@ class CartController
 
     // --- SEMUA FUNGSI AJAX JUGA DIJAGA KETAT ---
 
-    public function addToCartAjax() {
+    public function addToCartAjax()
+    {
         $this->forceLogin(true); // true = ini request AJAX
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? 0;
@@ -110,14 +116,16 @@ class CartController
         exit;
     }
 
-    public function updateCartAjax() {
+    public function updateCartAjax()
+    {
         $this->forceLogin(true);
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? 0;
         $op = $data['op'] ?? 'inc';
         if ($id > 0 && isset($_SESSION['cart'][$id])) {
-            if ($op === 'inc') { $_SESSION['cart'][$id]++; } 
-            elseif ($op === 'dec') {
+            if ($op === 'inc') {
+                $_SESSION['cart'][$id]++;
+            } elseif ($op === 'dec') {
                 $_SESSION['cart'][$id]--;
                 if ($_SESSION['cart'][$id] <= 0) unset($_SESSION['cart'][$id]);
             }
@@ -125,7 +133,8 @@ class CartController
         $this->getCartData();
     }
 
-    public function removeFromCartAjax() {
+    public function removeFromCartAjax()
+    {
         $this->forceLogin(true);
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? 0;
@@ -134,9 +143,10 @@ class CartController
         }
         $this->getCartData();
     }
-    
+
     // Fungsi ini tidak perlu dijaga karena hanya mengambil data
-    public function getCartData() {
+    public function getCartData()
+    {
         header('Content-Type: application/json');
         global $conn;
         $cart_items = [];

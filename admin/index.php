@@ -17,13 +17,16 @@ require_once '../app/controllers/DashboardController.php';
 require_once '../app/controllers/ProductController.php';
 require_once '../app/controllers/PosController.php';
 require_once '../app/controllers/ReportController.php';
-// AuthController tidak perlu dipanggil di sini lagi
+require_once '../app/controllers/OrderController.php';
+require_once '../app/controllers/CustomerController.php';
 
 // Inisialisasi controller
 $dashboardController = new DashboardController();
 $productController = new ProductController();
 $posController = new PosController();
 $reportController = new ReportController();
+$orderController = new OrderController();
+$customerController = new CustomerController();
 
 // Karena sudah pasti admin, halaman default-nya adalah dashboard
 $action = $_GET['action'] ?? 'dashboard';
@@ -60,16 +63,37 @@ switch ($action) {
     case 'getDetails':
         $reportController->getDetails();
         break;
-    
-    
-    // Rute logout tetap bisa diakses dari sini
+    case 'orders':
+        $orderController->showOrders();
+        break;
+    case 'showPayment':
+        $paymentController->showPaymentPage();
+        break;
+    case 'handlePaymentProof':
+        $paymentController->handlePaymentProof();
+        break;
+    case 'customerDetail':
+        $customerController->showCustomerDetail();
+        break;
+    case 'updateOrderStatus':
+        $orderController->updateOrderStatus();
+        break;
+    case 'customers':
+        $customerController->showCustomers();
+        break;
     case 'logout':
         session_destroy();
         header('Location: ../index.php?action=showLogin');
         exit;
-    
+
+
+        // Rute logout tetap bisa diakses dari sini
+    case 'logout':
+        session_destroy();
+        header('Location: ../index.php?action=showLogin');
+        exit;
+
     default:
         $dashboardController->showDashboard();
         break;
 }
-?>
