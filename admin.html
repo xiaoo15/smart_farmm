@@ -1,136 +1,157 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar Nav Responsive</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    body {
-        font-family: "poppins";
-      min-height: 100vh;
-      display: flex;
-    }
-
-    button {
-      background-color: #f0f0f0; /* Ganti dengan warna latar belakang yang Anda inginkan saat di-hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Efek bayangan ringan */
-  cursor: pointer;
-    }
-
-    /* Sidebar styling */
-    #sidebar {
-      min-width: 250px;
-      max-width: 250px;
-      background-color: #343a40;
-      color: white;
-      transition: all 0.3s;
-    }
-
-    .semi-transparent {
-    opacity: 0.5; /* putih 60% opacity */
-  }
-
-    #sidebar .nav-link {
-      color: white;
-    }
-    #sidebar .nav-link:hover {
-      
-      background-color: #f0f0f0; /* Ganti dengan warna latar belakang yang Anda inginkan saat di-hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Efek bayangan ringan */
-  cursor: pointer; /* Mengubah kursor menjadi pointer untuk menunjukkan bahwa elemen bisa diklik */
-    }
-    /* Content area */
-    #content {
-      flex: 1;
-      padding: 20px;
-    }
-    /* Responsive toggle */
-    @media (max-width: 768px) {
-      #sidebar {
-        margin-left: -250px;
-      }
-      #sidebar.active {
-        
-        margin-left: 0;
-      }
-    }
-  </style>
+    <style>
+        body {
+            font-family: "poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #343a40 !important;
+            color: white;
+            transition: all 0.3s;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 1.5rem;
+        }
+        #sidebar img {
+            width: 60%;
+            margin-bottom: 2rem;
+        }
+        .nav-item a.nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s ease;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1rem;
+        }
+        .nav-item a.nav-link:hover {
+            background-color: #495057 !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        }
+        .semi-transparent {
+            opacity: 0.5;
+        }
+        #content {
+            flex: 1;
+            padding: 2rem;
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav id="sidebar" class="bg-light ">
-  <img src="images/istockphoto-1342354750-612x612-removebg-preview.png" class="img-fluid w-80" alt="...">
-  <ul class="nav flex-column gap-2">
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">dasboard</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">my product</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">transaksi</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">Store settings</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">My account</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">log out</a>
-    </li>
-  </ul>
+
+<nav id="sidebar" class="bg-dark">
+    <img src="images/istockphoto-1342354750-612x612-removebg-preview.png" class="img-fluid w-50" alt="Logo">
+    <ul class="nav flex-column gap-2">
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="#">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="my product.html">My Product</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="#">Transaksi</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="#">Store Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="#">My Account</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="#">Log Out</a>
+        </li>
+    </ul>
 </nav>
 
-  <!-- Content -->
-  <div id="content">
-    <div class="row">
-    <div class="col">
-        <h3>dasboard</h3>
-        <p class= "semi-transparent">Lorem ipsum dolor sit.</p>
+<div id="content">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h3>Dashboard</h3>
+            <p class="semi-transparent">Look what you have made today!</p>
+        </div>
+        <div class="col-auto">
+            <nav class="navbar">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="images/8ae799f5-4c9d-4732-b407-ebf6640717e2.jpeg" alt="Profile" width="30" height="30" class="d-inline-block align-text-top rounded-circle me-2">
+                    Halo, Syaa
+                </a>
+            </nav>
+            
+        </div>
     </div>
-    <div class="col">
-      <nav class="navbar bg-body-tertiary ">
-  <div class="container-fluid">
-    <a class="navbar-brand ms-auto me-0 pl-1" href="#">
-      <img src="images/8ae799f5-4c9d-4732-b407-ebf6640717e2.jpeg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top rounded small">
-      halo,syaa
-    </a>
-  </div>
-</nav>
-    </div>
-  </div>
     <button class="btn btn-light mb-3 d-md-none" id="sidebarCollapse">Toggle Menu</button>
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="bg-white p-3 shadow-sm rounded text-start">
+                <p class="text-secondary mb-0">Customer</p>
+                <h2 class="fw-bold">150.000</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-white p-3 shadow-sm rounded text-start">
+                <p class="text-secondary mb-0">Revenue</p>
+                <h2 class="fw-bold">$931,290</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-white p-3 shadow-sm rounded text-start">
+                <p class="text-secondary mb-0">Transaction</p>
+                <h2 class="fw-bold">22,409,399</h2>
+            </div>
+        </div>
+    </div>
     
-    <div class="container text-center">
-  <div class="row">
-    <div class="col">
-      <div class="bg-white p-3 shadow-sm rounded text-start">
-        <p class="text-secondary mb-0">Customer</p>
-        <h2 class="fw-bold">150.000</h2>
-      </div>
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card p-4 shadow">
+                <h5 class="card-title text-center">Grafik Penjualan Bulanan</h5>
+                <canvas id="myChart" class="w-100"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card p-4 shadow">
+                <h5 class="card-title">Notifikasi Penjualan</h5>
+                <div class="list-group list-group-flush border-0">
+                    <div class="list-group-item border-0">
+                        <small class="text-muted">Baru saja ada pembelian dari **Angga Risky**</small>
+                    </div>
+                     <div class="list-group-item border-0">
+                        <small class="text-muted">Item **Shirup Marzzan** telah habis terjual</small>
+                    </div>
+                     <div class="list-group-item border-0">
+                        <small class="text-muted">Ada transaksi baru dari **Masayoshi**</small>
+                    </div>
+                    <div class="list-group-item border-0">
+                        <small class="text-muted">Anda berhasil mencapai target bulanan!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col">
-      <div class="bg-white p-3 shadow-sm rounded text-start">
-        <p class="text-secondary mb-0">Revenue</p>
-        <h2 class="fw-bold">$931,290</h2>
-      </div>
-    </div>
-    <div class="col">
-      <div class="bg-white p-3 shadow-sm rounded text-start">
-        <p class="text-secondary mb-0">Transaction</p>
-        <h2 class="fw-bold">22,409,399</h2>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <div class="card p-3">
+    
+     <div class="card p-3 ">
   <h5 class="card-title fw-bold">Recent Transactions</h5>
-  <div class="list-group list-group-flush">
+  <div class="list-group list-group-flush ">
     
     <a href="#" class="list-group-item list-group-item-action py-3">
       <div class="d-flex align-items-center">
@@ -187,16 +208,36 @@
 </div>
     </div>
 </div>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
     const sidebar = document.getElementById('sidebar');
     const toggleBtn = document.getElementById('sidebarCollapse');
 
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    }
+
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+            datasets: [{
+                label: 'Penjualan',
+                data: [1200, 1900, 3000, 5000, 2000, 3000],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
     });
-  </script>
+</script>
 </body>
 </html>
