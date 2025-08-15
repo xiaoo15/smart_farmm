@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Product</title>
+    <title>Update Product</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-       body {
+        body {
             font-family: "poppins", sans-serif;
             min-height: 100vh;
             display: flex;
+            background-color: #f8f9fa;
         }
-
         #sidebar {
             min-width: 250px;
             max-width: 250px;
@@ -43,30 +42,6 @@
         .semi-transparent {
             opacity: 0.5;
         }
-
-        .product-card {
-            border: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
-        /* CSS untuk membuat gambar menjadi persegi (square) */
-        .image-container {
-            width: 100%;
-            position: relative;
-            padding-bottom: 100%; /* Tinggi sama dengan lebar */
-        }
-        .image-container img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         #content {
             flex: 1;
             padding: 2rem;
@@ -79,8 +54,34 @@
                 margin-left: 0;
             }
         }
-        
-        </style>
+        .image-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
 
@@ -90,7 +91,7 @@
         <li class="nav-item">
             <a class="nav-link text-secondary" href="admin.html">Dashboard</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link text-secondary" href="my product.html">My Product</a>
         </li>
         <li class="nav-item">
@@ -111,8 +112,8 @@
 <div id="content">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h3>My product</h3>
-            <p class="semi-transparent">choose your product</p>
+            <h3>add product</h3>
+            <p class="semi-transparent">add your product</p>
         </div>
         <div class="col-auto">
             <nav class="navbar">
@@ -121,55 +122,61 @@
                     Halo, Syaa
                 </a>
             </nav>
-            
-            </div>
         </div>
-        <div>
-        <a href="my product.html">
-             <button class="btn btn-success mb-3 ">back</button>
-            </a>
-            <button class="btn btn-success mb-3 d-md-none" id="sidebarCollapse">nav menu</button>
     </div>
 
-    <div class="row g-4 justify-content-center">
-        <div class="col-md-6">
-            <a class="text-decoration-none link-secondary" href="update.html">
-                <div class="card product-card">
-                    <div class="image-container">
-                        <img src="images/images (3).jpeg" class="card-img-top" alt="Update product">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Update Product</h5>
-                        <p class="card-text text-center semi-transparent">can you update your product</p>
-                    </div>
+    <div>
+        <a href="pilihproduct.html">
+            <button class="btn btn-success mb-3">back</button>
+        </a>
+         <button class="btn btn-success mb-3 d-md-none" id="sidebarCollapse">nav menu</button>
+    </div>
+
+    <div class="card p-4 rounded-3 shadow-lg">
+        <h5 class="fw-bold mb-4">Product Details</h5>
+        <form>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="productName" class="form-label">Name Product</label>
+                    <input type="text" class="form-control" id="productName">
                 </div>
-            </a>
-        </div>
-        
-        <div class="col-md-6">
-            <a class="text-decoration-none link-secondary" href="add.html">
-                <div class="card product-card">
-                    <div class="image-container">
-                        <img src="images/images (1).jpeg" class="card-img-top" alt="Add product">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Add Product</h5>
-                        <p class="card-text text-center semi-transparent">can you add product here</p>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label for="productPrice" class="form-label">Price</label>
+                    <input type="number" class="form-control" id="productPrice">
                 </div>
-            </a>
-        </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="productCategory" class="form-label">Category</label>
+                <select id="productCategory" class="form-select">
+                    <option>none</option>
+                    <option>plant</option>
+                    <option>seed</option>
+                    <option>vegetables</option>
+                </select>
+            </div>
+            
+            <div class="col">
+      <div class="mb-3">
+    <div class="mb-3">
+                <label for="productDescription" class="form-label">thumbnails</label>
+                <textarea class="form-control" id="productDescription" rows="3"></textarea>
+            </div>
+  </div>
+    </div>
+    <div class="col">
+        <div class="mt-4">
+                <button type="submit" class="btn btn-success w-100 py-2">add product</button>
+            </div>
+    </div>
+        </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const sidebar = document.getElementById('sidebar');
+     const sidebar = document.getElementById('sidebar');
     const toggleBtn = document.getElementById('sidebarCollapse');
-
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
 </script>
 </body>
 </html>
