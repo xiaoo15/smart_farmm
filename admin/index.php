@@ -18,7 +18,7 @@ require_once '../app/controllers/ProductController.php';
 require_once '../app/controllers/PosController.php';
 require_once '../app/controllers/ReportController.php';
 require_once '../app/controllers/OrderController.php';
-require_once '../app/controllers/CustomerController.php';
+require_once '../app/controllers/CustomerController.php';   
 
 // Inisialisasi controller
 $dashboardController = new DashboardController();
