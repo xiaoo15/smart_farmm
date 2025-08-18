@@ -1,268 +1,294 @@
 <?php
-$title = "SmartFarm - Solusi Pertanian Modern";
-include 'templates/public_header.php';
+// File: app/views/home.php (VERSI FINAL + VOUCHER SECTION)
+$title = "SmartFarm - Tanam, Panen, Nikmati!";
+include 'templates/public_header.php'; // Ini header hijau muda yang sudah kita buat
 ?>
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
-    <div id="addCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header bg-success text-white">
-            <strong class="me-auto">SmartFarm</strong>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body" id="toast-body-message">
-            Produk berhasil ditambahkan!
-        </div>
-    </div>
-</div>
 
-<header class="hero-section">
+<main class="main-content-container">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 text-center text-lg-start">
-                <h1 class="display-4 fw-bold text-success mb-3">Kesegaran Langsung dari Kebun Cerdas</h1>
-                <p class="lead text-muted mb-4">Mulai petualangan berkebun Anda atau nikmati hasil panen terbaik yang ditanam dengan cinta dan teknologi.</p>
-                <a href="#katalog" class="btn btn-success btn-lg shadow-sm px-4 py-2">Lihat Katalog Kami</a>
-                <a href="index.php?action=allProducts" class="btn btn-outline-secondary btn-lg px-4 py-2 ms-2">Jelajahi Semua</a>
-            </div>
-            <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center mt-5 mt-lg-0">
-                <div class="hero-image-container">
-                    <img src="images/download (1).png" class="img-fluid hero-image" alt="Hero Image">
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
 
-<section id="katalog" class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h5 class="gallery-subtitle text-success">PILIHAN TERBAIK</h5>
-            <h2 class="gallery-title fw-bold">PRODUK UNGGULAN KAMI</h2>
-        </div>
-
-        <div id="product-list" class="row g-4">
-            <?php if (isset($products) && mysqli_num_rows($products) > 0): ?>
-                <?php
-                $product_count = 0;
-                mysqli_data_seek($products, 0);
-                while ($product = mysqli_fetch_assoc($products)):
-                    if ($product_count >= 8) break;
-
-                    $isStokHabis = ($product['stock'] <= 0);
-                    $tombolClass = $isStokHabis ? 'btn-outline-secondary' : 'btn-success';
-                    $tombolTeks = $isStokHabis ? 'Stok Habis' : 'Tambah';
-                    $tombolDisabled = $isStokHabis ? 'disabled' : '';
-                ?>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card h-100 product-card">
-                            
-                            <a href="index.php?action=productDetail&id=<?= $product['id'] ?>" class="img-container">
-                                <img src="public/images/products/<?= htmlspecialchars($product['image_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
-                            </a>
-                            
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="product-title">
-                                    <a href="index.php?action=productDetail&id=<?= $product['id'] ?>" class="text-dark text-decoration-none">
-                                        <?= htmlspecialchars($product['name']) ?>
-                                    </a>
-                                </h5>
-                                <p class="product-price mb-3">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
-                                <div class="mt-auto">
-                                    <button class="btn <?= $tombolClass ?> w-100 add-to-cart-btn fw-semibold" data-id="<?= $product['id'] ?>" <?= $tombolDisabled ?>><?= $tombolTeks ?></button>
-                                </div>
-                            </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded-3">
+                        <div class="carousel-item active">
+                            <img src="https://static.vecteezy.com/system/resources/previews/011/188/575/large_2x/yellow-and-orange-special-sale-coupon-template-with-exclusive-offer-up-to-50-percent-off-gift-voucher-with-50-percent-discount-special-promo-code-website-illustration-vector.jpg" class="d-block w-100" alt="Promo 1">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://static.vecteezy.com/system/resources/previews/011/188/575/large_2x/yellow-and-orange-special-sale-coupon-template-with-exclusive-offer-up-to-50-percent-off-gift-voucher-with-50-percent-discount-special-promo-code-website-illustration-vector.jpg" class="d-block w-100" alt="Promo 2">
                         </div>
                     </div>
-                <?php
-                    $product_count++;
-                endwhile;
-                ?>
-            <?php else: ?>
-                <div class="col-12">
-                    <p class="text-center text-muted fs-5 py-5">Belum ada produk unggulan.</p>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
 
-        <div class="text-center mt-5">
-            <a href="index.php?action=allProducts" class="btn btn-outline-success btn-lg">Lihat Semua Produk</a>
+        <div class="voucher-section row g-3 mb-4">
+            <div class="col-md-6">
+                <a href="#" class="voucher-card">
+                    <img src="https://images.unsplash.com/photo-1464297162577-f5295c892194?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Diskon Petani Lokal">
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="#" class="voucher-card">
+                    <img src="https://media.istockphoto.com/id/1329408006/photo/green-tomatoes-in-greenhouse.webp?a=1&s=612x612&w=0&k=20&c=KBy0VdkalatrqCB2MTkE4l4Dj5OwZ_mHQ4l3hcpN-Vw=" alt="Voucher Panen Segar">
+                </a>
+            </div>
         </div>
-        
+
+
+        <div class="category-icons-grid bg-white rounded-3 p-3 mb-4">
+            <div class="row g-2">
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-tags"></i></div>
+                        <span class="icon-text">Promo Spesial</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-store"></i></div>
+                        <span class="icon-text">SmartFarm Mall</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-bolt"></i></div>
+                        <span class="icon-text">Flash Sale</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-seedling"></i></div>
+                        <span class="icon-text">Bibit Unggul</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-carrot"></i></div>
+                        <span class="icon-text">Hasil Panen</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-tractor"></i></div>
+                        <span class="icon-text">Peralatan</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-gift"></i></div>
+                        <span class="icon-text">Gratis Ongkir</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-percent"></i></div>
+                        <span class="icon-text">Diskon & Voucher</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-boxes-stacked"></i></div>
+                        <span class="icon-text">Paket Hemat</span>
+                    </a>
+                </div>
+                <div class="col-3 col-md-2 col-lg-1 text-center">
+                    <a href="#" class="category-icon-item">
+                        <div class="icon-wrapper"><i class="fas fa-ellipsis-h"></i></div>
+                        <span class="icon-text">Semua Kategori</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="product-section bg-white rounded-3 p-3">
+            <div class="section-header">
+                <h4 class="section-title">REKOMENDASI UNTUKMU</h4>
+                <a href="index.php?action=allProducts" class="section-see-all">Lihat Semua <i class="fas fa-chevron-right"></i></a>
+            </div>
+
+            <div id="product-list" class="row g-3">
+                <?php if (isset($products) && mysqli_num_rows($products) > 0): ?>
+                    <?php
+                    mysqli_data_seek($products, 0); // Reset pointer
+                    while ($product = mysqli_fetch_assoc($products)):
+                    ?>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="index.php?action=productDetail&id=<?= $product['id'] ?>" class="product-card-link">
+                                <div class="card h-100 product-card">
+                                    <div class="img-container">
+                                        <img src="public/images/products/<?= htmlspecialchars($product['image_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="product-title"><?= htmlspecialchars($product['name']) ?></p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="product-price mb-0">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
+                                            <p class="product-sold mb-0"><?= $product['total_sold'] ?? 0 ?> terjual</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <?php
+                    endwhile;
+                    ?>
+                <?php else: ?>
+                    <div class="col-12">
+                        <p class="text-center text-muted p-5">Belum ada produk untuk direkomendasikan.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
-</section>
+</main>
 
-<?php
-// Panggil footer yang ada "otak"-nya
-include 'templates/public_footer.php';
-?>
+
+<?php include 'templates/public_footer.php'; ?>
 
 <style>
-    body {
-        background-color: #f8f9fa;
+    .main-content-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 
-    .hero-section {
-        padding: 6rem 0;
-        background-color: #fff;
+    /* ============================================= */
+    /* CSS BARU UNTUK VOUCHER SECTION                */
+    /* ============================================= */
+    .voucher-card {
+        display: block;
+        border-radius: 8px;
         overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* INI DIA CSS UNTUK EFEK GAMBAR HIDUPNYA */
-    .hero-image-container {
-        width: 350px;
-        height: 350px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        background: radial-gradient(circle, rgba(143, 255, 199, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
-        animation: pulse-bg 4s ease-in-out infinite alternate;
+    .voucher-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
-    @keyframes pulse-bg {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.05);
-        }
+    .voucher-card img {
+        width: 100%;
+        height: auto;
+        display: block;
     }
 
-    .hero-image {
-        width: 90%;
-        animation: float-up-down 4s ease-in-out infinite;
+    .category-icons-grid {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
-    @keyframes float-up-down {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-20px);
-        }
-    }
-
-    /* CSS LAINNYA */
-    .gallery-section {
-        padding: 80px 0;
-    }
-
-    .gallery-subtitle {
-        font-size: 0.9rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-    }
-
-    .gallery-title {
-        font-size: 2.5rem;
-        color: #343a40;
-        margin-bottom: 50px;
-        position: relative;
+    .category-icon-item {
         display: inline-block;
-        padding-bottom: 10px;
+        text-decoration: none;
+        color: #333;
+        transition: transform 0.2s ease;
     }
 
-    .gallery-title::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 0;
-        width: 80px;
-        height: 3px;
-        background-color: #198754;
-        border-radius: 5px;
+    .category-icon-item:hover {
+        transform: translateY(-5px);
+        color: var(--dark-primary-green);
+    }
+
+    .category-icon-item .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 0.5rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .category-icon-item .icon-text {
+        font-size: 0.75rem;
+        display: block;
+        line-height: 1.2;
+    }
+
+    .product-section {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .section-see-all {
+        text-decoration: none;
+        color: var(--dark-primary-green);
+        font-size: 0.9rem;
+    }
+
+    .product-card-link {
+        text-decoration: none;
     }
 
     .product-card {
-        background-color: #fff;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
-        transition: all 0.4s ease;
+        border: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+        border-radius: 5px;
         overflow: hidden;
     }
 
     .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        border-color: var(--dark-primary-green);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
     }
 
     .product-card .img-container {
-        height: 220px;
+        width: 100%;
+        padding-top: 100%;
+        position: relative;
     }
 
-    .product-card img {
+    .product-card .img-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .product-card:hover img {
-        transform: scale(1.05);
     }
 
     .product-card .card-body {
-        padding: 1.5rem;
+        padding: 0.75rem;
     }
 
     .product-card .product-title {
-        font-weight: 600;
-        color: #343a40;
+        font-size: 0.8rem;
+        color: #333;
+        margin-bottom: 0.25rem;
+        height: 2.4em;
+        line-height: 1.2em;
         overflow: hidden;
-        height: 3rem;
-        line-height: 1.5rem;
-        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
     }
 
     .product-card .product-price {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #28a745;
-        margin-bottom: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--dark-primary-green);
+        margin-bottom: 0;
     }
 
-    .carousel-item img {
-        height: 500px;
-        object-fit: cover;
+    .product-card .product-sold {
+        font-size: 0.75rem;
+        color: #6c757d;
     }
 </style>
-
-<?php
-// Panggil footer yang ada "otak"-nya
-include 'templates/public_footer.php';
-?>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('product-search-input');
-        const allCards = document.querySelectorAll('#product-list .product-card');
-        const noProductMessage = document.getElementById('no-product-found');
-
-        if (searchInput) {
-            searchInput.addEventListener('keyup', function() {
-                const searchTerm = this.value.toLowerCase();
-                let visibleCount = 0;
-                allCards.forEach(card => {
-                    const productName = card.dataset.name;
-                    if (productName.includes(searchTerm)) {
-                        card.style.display = 'block';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                noProductMessage.style.display = visibleCount === 0 ? 'block' : 'none';
-            });
-        }
-    });
-</script>
-
-<?php
-include 'templates/public_footer.php';
-?>

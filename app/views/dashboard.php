@@ -1,137 +1,139 @@
 <?php
-// File: app/views/dashboard.php (VERSI COMMAND CENTER)
 $title = "Dashboard";
-global $action;
+include 'templates/header.php';
 ?>
-
 <div class="admin-wrapper">
     <?php include 'templates/sidebar.php'; ?>
-
-    <div class="content-wrapper">
-        <?php include 'templates/header.php'; ?>
-        
-        <main class="p-4">
-            <h1 class="h2 mb-4">Dashboard</h1>
-
-            <div class="row">
-                <div class="col-lg-4 mb-4">
+    <main id="main-content">
+        <header class="top-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0">Dashboard</h2>
+                <div class="text-muted small"><i class="fas fa-calendar-alt me-2"></i><?= date('l, F d, Y') ?></div>
+            </div>
+        </header>
+        <section class="overview-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="h5 mb-0">Overview</h3>
+                <span class="text-muted small">Updated <?= date('d-m-Y') ?></span>
+            </div>
+            <div class="row g-4">
+                <div class="col-sm-6 col-lg-3">
                     <div class="card stat-card h-100">
-                        <div class="card-body">
-                            <div class="stat-icon bg-success"><i class="fas fa-dollar-sign"></i></div>
-                            <div>
-                                <h6 class="card-title">Penjualan Hari Ini</h6>
-                                <p class="card-text">Rp <?= number_format($stats['todays_sales'], 0, ',', '.') ?></p>
-                            </div>
-                        </div>
+                        <p class="stat-title">Total Income</p>
+                        <h4 class="stat-value">Rp<?= number_format($stats['todays_sales'], 0, ',', '.') ?></h4><span class="stat-change text-success">+2.18%</span><span class="text-muted small"> in a last month</span>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
+                <div class="col-sm-6 col-lg-3">
                     <div class="card stat-card h-100">
-                         <div class="card-body">
-                            <div class="stat-icon bg-warning text-dark"><i class="fas fa-exclamation-triangle"></i></div>
-                            <div>
-                                <h6 class="card-title">Produk Stok Menipis</h6>
-                                <p class="card-text"><?= $stats['low_stock_products'] ?> Jenis</p>
-                            </div>
-                        </div>
+                        <p class="stat-title">Profit</p>
+                        <h4 class="stat-value">Rp<?= number_format($stats['todays_sales'] * 0.4, 0, ',', '.') ?></h4><span class="stat-change text-success">+2.18%</span><span class="text-muted small"> in a last month</span>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
-                     <div class="card stat-card h-100">
-                         <div class="card-body">
-                            <div class="stat-icon bg-info"><i class="fas fa-receipt"></i></div>
-                            <div>
-                                <h6 class="card-title">Total Transaksi</h6>
-                                <p class="card-text"><?= $stats['total_transactions'] ?> Pesanan</p>
-                            </div>
-                        </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <p class="stat-title">Total order</p>
+                        <h4 class="stat-value"><?= $stats['total_transactions'] ?></h4><span class="stat-change text-danger">-1.62%</span><span class="text-muted small"> in a last month</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card stat-card h-100">
+                        <p class="stat-title">Conversion rate</p>
+                        <h4 class="stat-value">4.98%</h4><span class="stat-change text-success">+0.31%</span><span class="text-muted small"> in a last month</span>
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-lg-7 mb-4">
-                    <div class="card shadow-sm border-0 rounded-3 h-100">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">Grafik Penjualan 7 Hari Terakhir</h5>
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                    </div>
+        </section>
+        <section class="sales-revenue-section mt-4">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="card-title">Sales Revenue</h5>
+                    <div style="height: 300px;"><canvas id="salesChart"></canvas></div>
                 </div>
-
-                <div class="col-lg-5 mb-4">
-                    <div class="card shadow-sm border-0 rounded-3 mb-4">
-                        <div class="card-header bg-white fw-bold">
-                            <i class="fas fa-bell me-2"></i> Aktivitas Terbaru
-                        </div>
-                        <div class.card-body p-0" style="max-height: 200px; overflow-y: auto;">
-                            <ul class="list-group list-group-flush">
+            </div>
+        </section>
+        <section class="latest-order-section mt-4">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center p-4">
+                    <h5 class="mb-0">Latest Order</h5><a href="index.php?action=orders" class="small text-decoration-none">See all</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Customer name</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <?php if (!empty($stats['recent_transactions'])): ?>
-                                    <?php foreach ($stats['recent_transactions'] as $trx): ?>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <strong class="d-block text-truncate"><?= htmlspecialchars($trx['username']) ?></strong>
-                                            <small>Baru saja membuat pesanan.</small>
-                                        </div>
-                                        <a href="index.php?action=orders" class="btn btn-sm btn-outline-primary">Lihat</a>
-                                    </li>
+                                    <?php foreach (array_slice($stats['recent_transactions'], 0, 5) as $trx): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($trx['username']) ?></td>
+                                            <td><span class="badge bg-success-soft rounded-pill">Complete</span></td>
+                                            <td><?= date('d M, Y', strtotime($trx['transaction_date'])) ?></td>
+                                            <td class="text-end fw-bold">Rp<?= number_format($trx['total_price'], 0, ',', '.') ?></td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <li class="list-group-item text-center text-muted p-4">Belum ada aktivitas.</li>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted p-4">No recent orders.</td>
+                                    </tr>
                                 <?php endif; ?>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-header bg-white fw-bold">
-                            <i class="fas fa-star me-2"></i> Produk Terlaris
-                        </div>
-                        <div class="card-body p-0" style="max-height: 200px; overflow-y: auto;">
-                            <ul class="list-group list-group-flush">
-                                <?php if (!empty($stats['best_selling_products'])): ?>
-                                    <?php foreach ($stats['best_selling_products'] as $prod): ?>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span class="text-truncate"><?= htmlspecialchars($prod['name']) ?></span>
-                                        <span class="badge bg-success rounded-pill"><?= $prod['total_sold'] ?> terjual</span>
-                                    </li>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                     <li class="list-group-item text-center text-muted p-4">Belum ada produk yang terjual.</li>
-                                <?php endif; ?>
-                            </ul>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </main>
-        
-        <?php include 'templates/footer.php'; ?>
-        
-        <script>
-            // Script untuk Chart.js (dengan warna baru)
-            const ctx = document.getElementById('salesChart');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: <?= json_encode($stats['weekly_sales']['labels']) ?>,
-                    datasets: [{
-                        label: 'Pendapatan (Rp)',
-                        data: <?= json_encode($stats['weekly_sales']['data']) ?>,
-                        fill: true,
-                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                        borderColor: 'rgba(40, 167, 69, 1)',
-                        tension: 0.3,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: 'rgba(40, 167, 69, 1)',
-                        pointHoverRadius: 7
-                    }]
-                },
-                options: { 
-                    responsive: true,
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        </script>
-    </div>
+        </section>
+    </main>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const salesChartCanvas = document.getElementById('salesChart');
+    if (salesChartCanvas) {
+        new Chart(salesChartCanvas, {
+            type: 'line',
+            data: {
+                labels: <?= json_encode($stats['weekly_sales']['labels'] ?? []) ?>,
+                datasets: [{
+                    label: 'Sales Revenue',
+                    data: <?= json_encode($stats['weekly_sales']['data'] ?? []) ?>,
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#3B82F6',
+                    pointHoverRadius: 7,
+                    pointHoverBackgroundColor: '#3B82F6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            },
+        });
+    }
+</script>
+<?php include 'templates/footer.php'; ?>

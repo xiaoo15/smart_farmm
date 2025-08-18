@@ -84,13 +84,37 @@ class Transaction
         return mysqli_query($this->conn, $query);
     }
 
+    public function getRecentTransactions($limit = 5)
+    {
+        $limit = (int)$limit;
+        // GANTI QUERY LAMA DENGAN INI
+        $query = "
+        SELECT t.id, t.total_price, t.transaction_date, u.username
+        FROM transactions t
+        JOIN users u ON t.user_id = u.id
+        ORDER BY t.transaction_date DESC
+        LIMIT ?
+    ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $transactions = [];
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+        return $transactions;
+    }
     public function getTransactionDetails($transactionId)
     {
         $id = (int)$transactionId;
-        $query = "SELECT ti.*, p.name as product_name 
-                  FROM transaction_items ti
-                  JOIN products p ON ti.product_id = p.id
-                  WHERE ti.transaction_id = $id";
+        // TAMBAHKAN p.image_url as product_image DI SINI
+        $query = "SELECT ti.*, p.name as product_name, p.image_url as product_image 
+              FROM transaction_items ti
+              JOIN products p ON ti.product_id = p.id
+              WHERE ti.transaction_id = $id";
         $result = mysqli_query($this->conn, $query);
         $items = [];
         while ($row = mysqli_fetch_assoc($result)) {
@@ -117,28 +141,6 @@ class Transaction
         $row = mysqli_fetch_assoc($result);
         return $row['total'] ?? 0;
     }
-    public function getRecentTransactions($limit = 5)
-    {
-        $limit = (int)$limit;
-        $query = "
-            SELECT t.id, t.total_price, u.username
-            FROM transactions t
-            JOIN users u ON t.user_id = u.id
-            ORDER BY t.transaction_date DESC
-            LIMIT ?
-        ";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $transactions = [];
-        while ($row = $result->fetch_assoc()) {
-            $transactions[] = $row;
-        }
-        return $transactions;
-    }
 
     public function updatePaymentProof($transactionId, $proofFileName)
     {
@@ -155,19 +157,29 @@ class Transaction
 
         return $stmt->execute();
     }
+    // FUNGSI BARU (INI YANG BENAR)
     public function getTransactionDetailsForUser($transactionId, $userId)
     {
         $transactionId = (int)$transactionId;
         $userId = (int)$userId;
 
-        // KODE BARU YANG BENAR
+        // TAMBAHKAN p.image_url as product_image DI SINI
         $query = "
-            SELECT ti.*, p.name as product_name, t.total_price, t.transaction_date
-            FROM transaction_items ti
-            JOIN products p ON ti.product_id = p.id
-            JOIN transactions t ON ti.transaction_id = t.id
-            WHERE ti.transaction_id = ? AND t.user_id = ?
-        ";
+        SELECT 
+            ti.*, 
+            p.name as product_name, 
+            p.image_url as product_image, -- INI YANG BARU
+            t.total_price, 
+            t.transaction_date
+        FROM 
+            transaction_items ti
+        JOIN 
+            products p ON ti.product_id = p.id
+        JOIN 
+            transactions t ON ti.transaction_id = t.id
+        WHERE 
+            ti.transaction_id = ? AND t.user_id = ?
+    ";
 
         $stmt = mysqli_prepare($this->conn, $query);
         mysqli_stmt_bind_param($stmt, "ii", $transactionId, $userId);
@@ -180,7 +192,6 @@ class Transaction
         }
         return $details;
     }
-
     public function getBestSellingProducts($limit = 5)
     {
         $limit = (int)$limit;
@@ -204,7 +215,20 @@ class Transaction
         }
         return $products;
     }
+    public function getTransactionsWithItemsByUserId($userId)
+    {
+        $userId = (int)$userId;
+        $transactions = $this->getTransactionsByUserId($userId); // Ambil semua transaksi dulu
 
+        $result = [];
+        foreach ($transactions as $transaction) {
+            // Untuk setiap transaksi, ambil detail itemnya
+            $items = $this->getTransactionDetails($transaction['id']);
+            $transaction['items'] = $items; // Selipkan item ke dalam data transaksi
+            $result[] = $transaction;
+        }
+        return $result;
+    }
     public function getTransactionForUser($transactionId, $userId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM transactions WHERE id = ? AND user_id = ?");

@@ -18,7 +18,8 @@ require_once '../app/controllers/ProductController.php';
 require_once '../app/controllers/PosController.php';
 require_once '../app/controllers/ReportController.php';
 require_once '../app/controllers/OrderController.php';
-require_once '../app/controllers/CustomerController.php';   
+require_once '../app/controllers/CustomerController.php';
+require_once '../app/controllers/ChatController.php';
 
 // Inisialisasi controller
 $dashboardController = new DashboardController();
@@ -27,14 +28,16 @@ $posController = new PosController();
 $reportController = new ReportController();
 $orderController = new OrderController();
 $customerController = new CustomerController();
+$chatController = new ChatController();
 
-// Karena sudah pasti admin, halaman default-nya adalah dashboard
 $action = $_GET['action'] ?? 'dashboard';
 
 switch ($action) {
-    // Rute Admin
     case 'dashboard':
         $dashboardController->showDashboard();
+        break;
+    case 'chat':
+        $chatController->showChatAdmin();
         break;
     case 'products':
         $productController->showProducts();
