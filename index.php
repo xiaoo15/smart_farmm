@@ -9,17 +9,17 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/app/controllers/HomeController.php';
 require_once __DIR__ . '/app/controllers/CartController.php';
 require_once __DIR__ . '/app/controllers/AuthController.php';
-// Panggil juga PaymentController-nya
+require_once __DIR__ . '/app/controllers/ReviewController.php';
 require_once __DIR__ . '/app/controllers/PaymentController.php';
+require_once __DIR__ . '/app/controllers/ChatController.php';
 
 // Inisialisasi controller
 $homeController = new HomeController();
 $cartController = new CartController();
 $authController = new AuthController();
-// ==========================================================
-// INI DIA BAGIAN YANG KEMARIN KETINGGALAN!
-// ==========================================================
+$reviewController = new ReviewController();
 $paymentController = new PaymentController();
+$chatController = new ChatController();
 
 
 $action = $_GET['action'] ?? 'home';
@@ -27,6 +27,21 @@ $action = $_GET['action'] ?? 'home';
 switch ($action) {
     case 'home':
         $homeController->showHome();
+        break;
+    case 'sendMessage':
+        $chatController->sendMessageAjax();
+        break;
+    case 'getMessages':
+        $chatController->getMessagesAjax();
+        break;
+    case 'showReviewPage':
+        $reviewController->showReviewPage();
+        break;
+    case 'submitReview':
+        $reviewController->submitReview();
+        break;
+    case 'search':
+        $homeController->showSearchResults();
         break;
     case 'allProducts':
         $homeController->showAllProducts();

@@ -36,24 +36,6 @@ class AuthController
         }
     }
 
-    public function showMyOrders()
-    {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=showLogin');
-            exit;
-        }
-
-        global $conn;
-        $transactionModel = new Transaction($conn);
-        $userId = $_SESSION['user']['id'];
-        $transactions = $transactionModel->getTransactionsByUserId($userId);
-
-        include __DIR__ . '/../views/my_orders.php';
-    }
-
-    /**
-     * Menampilkan detail dari satu pesanan.
-     */
     public function showOrderDetails() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?action=showLogin');
@@ -94,6 +76,24 @@ class AuthController
         include __DIR__ . '/../views/auth/register.php';
     }
 
+public function showMyOrders()
+{
+    if (!isset($_SESSION['user'])) {
+        header('Location: index.php?action=showLogin');
+        exit;
+    }
+
+    global $conn;
+    // Kita butuh Transaction.php di sini
+    require_once __DIR__ . '/../models/Transaction.php';
+    $transactionModel = new Transaction($conn);
+    $userId = $_SESSION['user']['id'];
+
+    // Panggil fungsi baru yang sudah kita buat!
+    $transactions = $transactionModel->getTransactionsWithItemsByUserId($userId);
+
+    include __DIR__ . '/../views/my_orders.php';
+}
 
 
     public function handleRegister()

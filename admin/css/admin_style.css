@@ -1,173 +1,193 @@
-/* File: admin/css/admin_style.css (VERSI BOOTSTRAP MODERN) */
+/* File: admin/css/admin_style.css (VERSI DESAIN BARU FINAL) */
 :root {
-    --primary-green: #28a745;
-    --dark-theme-bg: #1e293b; /* Warna gelap dari referensi */
-    --dark-theme-text: #94a3b8;
-    --dark-theme-hover-bg: #334155;
-    --dark-theme-hover-text: #ffffff;
-    --dark-theme-active-border: #28a745; /* Warna hijau kita */
-    --body-bg: #f4f7f6;
+  --bg-main: #f4f7fe;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #151d48;
+  --text-secondary: #737791;
+  --color-primary: #3b82f6;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --border-color: #e2e8f0;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--body-bg);
+  background-color: var(--bg-main);
+  font-family: "Poppins", sans-serif;
+  color: var(--text-primary);
 }
 
 .admin-wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-    transition: margin-left 0.4s ease-in-out; /* Animasi pendorong konten */
+  display: flex;
+  min-height: 100vh;
 }
 
-/* ===== Sidebar (Mode Normal) ===== */
-.sidebar {
-    width: 260px; /* Lebar normal */
-    min-width: 260px;
-    background: var(--sidebar-bg);
-    box-shadow: 0 0 30px rgba(0,0,0,0.1);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi utama sidebar */
+/* Sidebar Styling */
+.sidebar-wrapper {
+  background-color: var(--bg-sidebar);
+  width: 260px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  transition: margin-left 0.3s;
+}
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.sidebar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.sidebar-brand i {
+  color: var(--color-primary);
 }
 
-.sidebar .sidebar-header {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #e9ecef;
-    white-space: nowrap; /* Biar teks nggak turun saat transisi */
+.sidebar-menu {
+  padding: 1rem;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.menu-header {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.5rem 0.5rem;
+}
+.sidebar-menu .components a {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  border-radius: 8px;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s ease;
+}
+.sidebar-menu .components a:hover,
+.sidebar-menu .components li.active > a {
+  background-color: var(--color-primary);
+  color: white;
+}
+.sidebar-menu .components a .badge {
+  font-size: 0.7rem;
+}
+.sidebar-menu .collapse a {
+  padding-left: 3.2rem;
+  font-size: 0.9rem;
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+.sidebar-menu .collapse a:hover {
+  background-color: #f0f0f0;
+  color: var(--text-primary);
 }
 
-.sidebar .sidebar-header .icon {
-    color: var(--primary-green);
-    font-size: 1.8rem;
+.sidebar-footer {
+  padding: 1rem;
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+}
+.user-profile-block {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+.logout-icon {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+.logout-icon:hover {
+  color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
-.sidebar .sidebar-header h3 {
-    color: var(--text-dark);
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin: 0;
-    transition: opacity 0.3s ease;
+/* Main Content Styling */
+#main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+.top-header {
+  padding: 0 0 2rem 0;
+}
+.top-header h2 {
+  font-weight: 600;
 }
 
-.sidebar ul.components {
-    padding: 20px 0;
-    flex-grow: 1;
-    overflow: hidden; /* Sembunyikan scrollbar saat transisi */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: none;
+  background-color: var(--bg-card);
+}
+.stat-card {
+  padding: 1.5rem;
+}
+.stat-title {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.stat-change {
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.sidebar ul p {
-    color: var(--text-muted);
-    padding: 10px 30px;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    transition: opacity 0.3s ease;
+.table > :not(caption) > * > * {
+  padding: 1rem 1rem;
+  vertical-align: middle;
+}
+.table thead th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  border: none;
+  font-size: 0.9rem;
+}
+.table tbody tr {
+  border-top: 1px solid var(--border-color);
+}
+.table tbody td {
+  font-weight: 500;
 }
 
-.sidebar ul li a {
-    padding: 15px 30px;
-    font-size: 1.05em;
-    display: flex; /* Ubah jadi flex biar ikon & teks sejajar */
-    align-items: center;
-    color: var(--text-muted);
-    font-weight: 500;
-    white-space: nowrap; /* Biar teks nggak turun */
-    transition: all 0.3s ease;
-}
-
-.sidebar ul li a i {
-    transition: font-size 0.3s ease;
-}
-
-.sidebar ul li a span {
-    transition: opacity 0.2s ease;
-}
-
-.sidebar ul li a:hover {
-    color: var(--primary-green);
-    background: var(--light-green);
-}
-
-.sidebar ul li.active > a {
-    color: var(--primary-green);
-    background: var(--light-green);
-    font-weight: 600;
-}
-
-.sidebar .sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid #e9ecef;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-/* ===== KEAJAIBAN DIMULAI: Mode Sidebar "Menciut" (Tablet/Desktop) ===== */
-.admin-wrapper.sidebar-collapsed .sidebar {
-    width: 90px; /* Lebar saat jadi mini */
-    min-width: 90px;
-}
-
-.admin-wrapper.sidebar-collapsed .sidebar .sidebar-header h3,
-.admin-wrapper.sidebar-collapsed .sidebar ul p,
-.admin-wrapper.sidebar-collapsed .sidebar ul li a span, /* Sembunyikan teks menu */
-.admin-wrapper.sidebar-collapsed .sidebar .sidebar-footer div div {
-    opacity: 0; /* Bikin teks menghilang dengan halus */
-    width: 0;
-    display: none; /* Sembunyikan total setelah animasi */
-}
-
-.admin-wrapper.sidebar-collapsed .sidebar ul li a {
-    justify-content: center; /* Ikon jadi ke tengah */
-}
-
-.admin-wrapper.sidebar-collapsed .sidebar ul li a i {
-    font-size: 1.5rem; /* Perbesar ikon saat mode mini */
-}
-
-.admin-wrapper.sidebar-collapsed .sidebar .sidebar-footer .d-flex {
-    justify-content: center;
-}
-
-/* ===== Navbar Konten ===== */
-.content-wrapper {
-    width: 100%;
-    transition: all 0.3s;
-}
-.top-navbar {
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    padding: 10px 20px;
-}
-.top-navbar .sidebar-toggle {
-    border: none;
-    background: none;
-    font-size: 1.5rem;
-    color: var(--text-dark);
-}
-
-/* ===== LOGIKA RESPONSIVE UNTUK HP ===== */
-@media (max-width: 768px) {
-    .sidebar {
-        position: fixed; /* Bikin dia melayang */
-        z-index: 1000;
-        height: 100%;
-        margin-left: -260px; /* Sembunyikan di luar layar */
-    }
-    .sidebar.active {
-        margin-left: 0; /* Tampilkan saat aktif */
-    }
-    /* Di HP, mode "menciut" itu sama dengan "tersembunyi" */
-    .admin-wrapper.sidebar-collapsed .sidebar {
-        margin-left: -260px;
-    }
-    /* Overlay gelap saat sidebar muncul */
-    .overlay {
-        display: none; position: fixed; width: 100vw; height: 100vh;
-        background: rgba(0, 0, 0, 0.7); z-index: 999; opacity: 0;
-        transition: all 0.5s ease-in-out;
-    }
-    .overlay.active { display: block; opacity: 1; }
+.badge.bg-success-soft {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
 }

@@ -38,6 +38,21 @@ class HomeController
         include __DIR__ . '/../views/product_detail.php';
     }
 
+    public function showSearchResults()
+    {
+        global $conn;
+        $productModel = new Product($conn);
+
+        // Ambil kata kunci dari URL (?q=...)
+        $searchTerm = $_GET['q'] ?? '';
+
+        // Panggil fungsi searchProducts dari model
+        $products = $productModel->searchProducts($searchTerm);
+
+        // Panggil view baru yang akan kita buat nanti
+        include __DIR__ . '/../views/search_results.php';
+    }
+
     public function showHome()
     {
         // Ambil koneksi database global
