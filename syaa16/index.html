@@ -1,329 +1,348 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EcoPlant</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartFarm - Tanam, Panen, Nikmati!</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-      body {
-        background-color: #f0f0f0;
-        font-family: "Poppins", sans-serif;
+      :root {
+        --primary-green: #90ee90;
+        --dark-primary-green: #7cfc00;
+        --text-color: #333;
+        --white: #fff;
+        --light-grey: #f2f2f2;
       }
-        .recent-product-section {
-            background-color: #E6F5EA; /* Latar belakang hijau muda untuk bagian */
-            padding: 40px 0; /* Padding atas dan bawah */
-            border-radius: 10px; /* Sudut membulat */
-            margin-top: 50px; /* Jarak dari atas */
-            position: relative; /* Untuk menempatkan panah jika diperlukan */
-            /* Ini akan membuat bentuk seperti tab folder */
-            border-top-left-radius: 15px; /* Lebih bulat di kiri atas */
-            border-top-right-radius: 60px; /* Lebih seperti tab di kanan atas */
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            overflow: hidden; /* Penting untuk bentuk tab */
-        }
-
-        /* Bagian tab folder */
-        .recent-product-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 150px; /* Lebar bagian tab */
-            height: 100%;
-            background-color: #D3EFDB; /* Warna lebih gelap untuk bagian tab */
-            border-top-left-radius: 15px;
-            border-top-right-radius: 0; /* Tidak ada bulat di sini */
-            z-index: 1; /* Pastikan di bawah teks judul utama */
-        }
-        .recent-product-header-wrapper {
-            position: relative;
-            z-index: 2; /* Pastikan di atas pseudo-element */
-            padding-left: 20px; /* Sesuaikan agar tidak terlalu dekat dengan tepi */
-            padding-top: 15px;
-        }
-
-        .recent-product-header {
-            color: #388E3C; /* Hijau gelap untuk judul */
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 5px; /* Kurangi jarak bawah */
-        }
-        .recent-product-description {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-        }
-        .product-card {
-            background-color: #fff;
-            border-radius: 15px; /* Sudut lebih bulat */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan halus */
-            padding: 20px;
-            display: flex; /* Untuk menyelaraskan gambar dan teks */
-            align-items: center; /* Sejajarkan item secara vertikal */
-            margin-bottom: 20px; /* Jarak antar kartu di layar kecil */
-            transition: transform 0.2s ease-in-out; /* Efek hover halus */
-            position: relative;
-            z-index: 3;
-        }
-        .product-card:hover {
-            transform: translateY(-5px); /* Angkat kartu saat di-hover */
-        }
-        .product-card img {
-            width: 80px; /* Sesuaikan ukuran gambar */
-            height: 80px;
-            object-fit: contain;
-            margin-right: 20px; /* Jarak antara gambar dan teks */
-        }
-        .product-card-title {
-            color: #388E3C; /* Hijau gelap untuk judul kartu */
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        .product-card-text {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
-        /* Styling untuk panah navigasi (contoh dasar) */
-        .navigation-arrows {
-            position: absolute;
-            top: 40px; /* Sesuaikan posisi */
-            right: 40px; /* Sesuaikan posisi */
-            display: flex;
-            gap: 10px;
-            z-index: 2; /* Pastikan di atas elemen lain */
-        }
-        .arrow-btn {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            color: #388E3C;
-            font-weight: bold;
-        }
-        .arrow-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Penyesuaian untuk teks deskripsi di bawah judul utama */
-        .header-description {
-            color: #6c757d;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            max-width: 300px; /* Batasi lebar teks agar tidak terlalu panjang */
-        }
-
-        .gallery-section {
-            padding: 80px 0; /* Padding atas dan bawah untuk section */
-            text-align: center; /* Pusatkan semua konten dalam section */
-        }
-        .gallery-subtitle {
-            font-size: 0.9rem;
-            color: #6c757d;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .gallery-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #343a40;
-            margin-bottom: 30px;
-            position: relative;
-            display: inline-block; /* Agar underline sesuai lebar teks */
-            padding-bottom: 10px; /* Jarak antara teks dan underline */
-        }
-        .gallery-title::after {
-            content: '';
-            position: absolute;
-            left: 50%; /* Pusatkan underline */
-            transform: translateX(-50%); /* Pusatkan underline */
-            bottom: 0;
-            width: 80px; /* Lebar underline */
-            height: 3px;
-            background-color: #28a745; /* Warna hijau untuk underline */
-            border-radius: 5px; /* Sudut membulat untuk underline */
-        }
-        .gallery-img-wrapper {
-            padding: 10px; /* Jarak antar gambar */
-        }
-        .gallery-img {
-            width: 100%;
-            height: 250px; /* Tinggi gambar yang seragam */
-            object-fit: cover; /* Pastikan gambar menutupi area tanpa terdistorsi */
-            border-radius: 10px; /* Sudut membulat untuk gambar */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan halus */
-            transition: transform 0.3s ease-in-out; /* Efek hover */
-        }
-        .gallery-img:hover {
-            transform: translateY(-5px); /* Angkat sedikit saat di-hover */
-        }
-
-        /* Responsif untuk layar lebih kecil */
-        @media (max-width: 767.98px) {
-            .gallery-title {
-                font-size: 2rem;
-            }
-            .gallery-section {
-                padding: 50px 0;
-            }
-        }
-
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--light-grey);
+      }
+      .top-bar {
+        background-color: var(--primary-green);
+        padding: 0.25rem 0;
+        font-size: 0.75rem;
+      }
+      .top-bar a {
+        color: var(--text-color);
+        text-decoration: none;
+        margin: 0 0.5rem;
+      }
+      .main-header {
+        background-color: var(--white);
+        padding: 1rem 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--dark-primary-green) !important;
+      }
+      .search-form {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        display: flex;
+      }
+      .search-form input {
+        border: none;
+        outline: none;
+        flex-grow: 1;
+        padding: 0.7rem;
+        font-size: 0.9rem;
+      }
+      .search-form button {
+        background-color: var(--primary-green);
+        color: var(--text-color);
+        border: none;
+        padding: 0.7rem 1.2rem;
+      }
+      .header-icons a {
+        color: var(--text-color);
+        font-size: 1.5rem;
+        margin-left: 1.5rem;
+        position: relative;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        font-size: 0.7rem;
+        padding: 3px 6px;
+        border-radius: 50%;
+      }
+      .main-content-container {
+        padding: 2rem 0;
+      }
+      .voucher-card {
+        display: block;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+      }
+      .voucher-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .voucher-card img {
+        width: 100%;
+      }
+      .category-icons-grid {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .category-icon-item {
+        text-decoration: none;
+        color: #333;
+        transition: transform 0.2s ease;
+      }
+      .category-icon-item:hover {
+        transform: translateY(-5px);
+        color: var(--dark-primary-green);
+      }
+      .category-icon-item .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+      .category-icon-item .icon-text {
+        font-size: 0.75rem;
+        display: block;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .section-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .section-see-all {
+        text-decoration: none;
+        color: var(--dark-primary-green);
+      }
+      .product-card-link {
+        text-decoration: none;
+      }
+      .product-card {
+        border: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .product-card:hover {
+        border-color: var(--dark-primary-green);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+      }
+      .product-card .img-container {
+        width: 100%;
+        padding-top: 100%;
+        position: relative;
+      }
+      .product-card .img-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .product-card .card-body {
+        padding: 0.75rem;
+      }
+      .product-card .product-title {
+        font-size: 0.8rem;
+        color: #333;
+        margin-bottom: 0.25rem;
+        height: 2.4em;
+        line-height: 1.2em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
+      .product-card .product-price {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--dark-primary-green);
+      }
+      .product-card .product-sold {
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top px-md-5">
-      <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#"><span class="text-success">E</span>coPlant</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto gap-2">
-            <li class="nav-item">
-
-              <a class="nav-link active" href="#main">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="# ">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Kerajang</a>
-            </li>
-          </ul>
+    <header class="main-header sticky-top">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-3 col-md-4 col-6">
+            <a class="navbar-brand" href="index.html"
+              ><i class="fas fa-leaf me-2"></i>SmartFarm</a
+            >
+          </div>
+          <div class="col-lg-6 col-md-8 col-6 order-lg-2 order-3 mt-3 mt-md-0">
+            <form class="search-form">
+              <input
+                class="form-control"
+                type="search"
+                placeholder="Cari bibit, sayuran, dan lainnya..."
+              />
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
+          <div class="col-lg-3 col-12 order-lg-3 order-2 text-end">
+            <div class="header-icons d-inline-flex">
+              <a href="#"
+                ><i class="fas fa-shopping-cart"></i
+                ><span class="cart-badge badge bg-danger">3</span></a
+              >
+              <a href="#"><i class="fas fa-user-circle"></i></a>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
 
-    <main class="container pt-5 mt-4">
-      <div class="row">
-        <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start text-center text-md-start gap-3">
-          <h1 class="fs-1">Rooted in <span class="text-success">Nature</span> and Grown with Love.</h1>
-          <p>Membangun masa depan hijau lewat inovasi dan cinta pada tanaman.</p>
-           <div class="d-flex">
-          <button type="button" class="btn btn-success me-2">Beli Sekarang</button>
-          <button type="button" class="btn">
-          <img src="images/images-removebg-preview (1).png" alt="Logo" class="me-2" style="height: 2em;"> klik aku
-          </button>
-        </div>
-        </div>
-        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
-          <img src="images/download (1).png" class="rounded img-fluid d-none d-md-block" style="max-width: 60%;" alt="picture">
-        </div>      
-      </div>
-
-       <div class="container recent-product-section">
-        <div class="navigation-arrows">
-            <div class="arrow-btn">&lt;</div>
-            <div class="arrow-btn">&gt;</div>
-        </div>
-
-        <div class="recent-product-header-wrapper">
-            <h2 class="recent-product-header">RECENT PRODUCT</h2>
-            <p class="header-description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet nibh eu est ullamcorper.
-            </p>
-        </div>
-
-        <div class="row px-3"> <div class="col-md-6">
-                <div class="product-card">
-                    <img src="images/eI6xOPtKKT-removebg-preview.png" alt="Toss the tubs image">
-                    <div>
-                        <h5 class="product-card-title">Toss the tubs</h5>
-                        <p class="product-card-text">Toss the tubs into the recycling bin! Let's make our community greener.</p>
-                    </div>
+    <main class="main-content-container">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col-12">
+            <div
+              id="promoCarousel"
+              class="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-inner rounded-3">
+                <div class="carousel-item active">
+                  <img
+                    src="https://cf.shopee.co.id/file/id-50009109-7a32938a7c29bcb3a055375496f8329b_xxhdpi"
+                    class="d-block w-100"
+                    alt="Promo"
+                  />
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="product-card">
-                    <img src="images/download_6-removebg-preview.png" alt="Reveal the plant image">
-                    <div>
-                        <h5 class="product-card-title">Reveal the plant</h5>
-                        <p class="product-card-text">As we removed the large cloth covering, the audience eagerly anticipated.</p>
-                    </div>
+                <div class="carousel-item">
+                  <img
+                    src="https://cf.shopee.co.id/file/id-50009109-1a80a2f3f3174128030252b31a382343_xxhdpi"
+                    class="d-block w-100"
+                    alt="Promo"
+                  />
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-     <div class="container pt-5 mt-4">
-        <div class="row">
-            <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
-                <img src="images/fb3c97abe7243934a7ccf7e8a44fa9f0-removebg-preview.png" class="rounded img-fluid d-none d-md-block" style="max-width: 100%;" alt="picture">
-            </div>
-            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-start text-center text-md-start gap-3">
-                <h5 class="gallery-subtitle">Gallery</h5>
-                <h1 class="fs-1">Rooted in <span class="text-success">Nature</span> and Grown with Love.</h1>
-                <p>Membangun masa depan hijau lewat inovasi dan cinta pada tanaman.</p>
-                <div class="d-flex">
-                    <button type="button" class="btn btn-success me-2">Beli Sekarang</button>
-                    <button type="button" class="btn border-success text-succes me-2">Beli Sekarang</button>
-                </div>
-            </div>
+        <div class="voucher-section row g-3 mb-4">
+          <div class="col-md-6">
+            <a href="#" class="voucher-card"
+              ><img
+                src="https://images.unsplash.com/photo-1464297162577-f5295c892194?q=80&w=1170"
+                alt="Voucher"
+            /></a>
+          </div>
+          <div class="col-md-6">
+            <a href="#" class="voucher-card"
+              ><img
+                src="https://media.istockphoto.com/id/1329408006/photo/green-tomatoes-in-greenhouse.webp?s=612x612"
+                alt="Voucher"
+            /></a>
+          </div>
         </div>
-    </div>
 
-    <section class="gallery-section">
-        <div class="container">
-            <h5 class="gallery-subtitle">Gallery</h5>
-            <h2 class="gallery-title">OUR GALLERY</h2>
-
-            <div id="carouselExampleCaptions" class="carousel slide">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="images/wagubri-ajak-warga-riau-gemar-berta.jpg" class="d-block w-100 rounded" alt="foto">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>First slide label</h5>
-        <p>Some representative placeholder content for the first slide.</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="images/olerikultura.jpg" class="d-block w-100 rounded" alt="foto">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Second slide label</h5>
-        <p>Some representative placeholder content for the second slide.</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="images/images.jpeg" class="d-block w-100 rounded" alt="foto">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Third slide label</h5>
-        <p>Some representative placeholder content for the third slide.</p>
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-            </div>
+        <div class="category-icons-grid bg-white rounded-3 p-3 mb-4">
+          <div class="row g-2">
+            <script>
+              const categories = [
+                { icon: "fa-tags", text: "Promo" },
+                { icon: "fa-store", text: "Mall" },
+                { icon: "fa-bolt", text: "Flash Sale" },
+                { icon: "fa-seedling", text: "Bibit" },
+                { icon: "fa-carrot", text: "Panen" },
+                { icon: "fa-tractor", text: "Alat" },
+                { icon: "fa-gift", text: "Gratis Ongkir" },
+                { icon: "fa-percent", text: "Diskon" },
+                { icon: "fa-boxes-stacked", text: "Paket Hemat" },
+                { icon: "fa-ellipsis-h", text: "Lainnya" },
+              ];
+              categories.forEach((cat) => {
+                document.write(
+                  `<div class="col-3 col-md-2 col-lg-1 text-center"><a href="#" class="category-icon-item"><div class="icon-wrapper"><i class="fas ${cat.icon}"></i></div><span class="icon-text">${cat.text}</span></a></div>`
+                );
+              });
+            </script>
+          </div>
         </div>
-    </section>
+
+        <div class="product-section bg-white rounded-3 p-3">
+          <div class="section-header">
+            <h4 class="section-title">REKOMENDASI UNTUKMU</h4>
+            <a href="#" class="section-see-all"
+              >Lihat Semua <i class="fas fa-chevron-right"></i
+            ></a>
+          </div>
+          <div class="row g-3">
+            <script>
+              for (let i = 1; i <= 12; i++) {
+                document.write(`
+                                <div class="col-6 col-md-4 col-lg-2">
+                                    <a href="#" class="product-card-link">
+                                        <div class="card h-100 product-card">
+                                            <div class="img-container"><img src="syaa16/images/images (${
+                                              (i % 4) + 1
+                                            }).jpeg" class="card-img-top" alt="Produk ${i}"></div>
+                                            <div class="card-body">
+                                                <p class="product-title">Nama Produk Keren dan Menarik #${i}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <p class="product-price mb-0">Rp${(
+                                                      Math.random() * 50000 +
+                                                      5000
+                                                    )
+                                                      .toFixed(0)
+                                                      .replace(
+                                                        /\B(?=(\d{3})+(?!\d))/g,
+                                                        "."
+                                                      )}</p>
+                                                    <p class="product-sold mb-0">${Math.floor(
+                                                      Math.random() * 1000
+                                                    )}+ terjual</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            `);
+              }
+            </script>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

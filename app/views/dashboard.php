@@ -4,111 +4,115 @@ include 'templates/header.php';
 ?>
 <div class="admin-wrapper">
     <?php include 'templates/sidebar.php'; ?>
-    <main id="main-content">
-        <header class="top-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="h4 mb-0">Dashboard</h2>
-                <div class="text-muted small"><i class="fas fa-calendar-alt me-2"></i><?= date('l, F d, Y') ?></div>
+
+    <div class="main-content">
+        <header class="content-header">
+            <div class="header-welcome">
+                <h2>Welcome back, <?= htmlspecialchars($_SESSION['user']['username']) ?>!</h2>
+                <p>Here's what's happening with your store today.</p>
+            </div>
+            <div class="header-actions d-flex align-items-center">
+                <input type="text" class="form-control me-2" placeholder="Search...">
+                <button class="btn btn-light"><i class="fas fa-bell"></i></button>
             </div>
         </header>
-        <section class="overview-section">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="h5 mb-0">Overview</h3>
-                <span class="text-muted small">Updated <?= date('d-m-Y') ?></span>
-            </div>
+
+        <section class="today-sales mb-4">
             <div class="row g-4">
-                <div class="col-sm-6 col-lg-3">
-                    <div class="card stat-card h-100">
-                        <p class="stat-title">Total Income</p>
-                        <h4 class="stat-value">Rp<?= number_format($stats['todays_sales'], 0, ',', '.') ?></h4><span class="stat-change text-success">+2.18%</span><span class="text-muted small"> in a last month</span>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon icon-earnings"><i class="fas fa-dollar-sign"></i></div>
+                        <p class="stat-card-title">Today's Sales</p>
+                        <h4 class="stat-card-value">Rp<?= number_format($stats['todays_sales'], 0, ',', '.') ?></h4>
+                        <span class="stat-card-change text-success"><i class="fas fa-arrow-up"></i> 12%</span> vs last month
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="card stat-card h-100">
-                        <p class="stat-title">Profit</p>
-                        <h4 class="stat-value">Rp<?= number_format($stats['todays_sales'] * 0.4, 0, ',', '.') ?></h4><span class="stat-change text-success">+2.18%</span><span class="text-muted small"> in a last month</span>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon icon-visitors"><i class="fas fa-users"></i></div>
+                        <p class="stat-card-title">Today's Visitors</p>
+                        <h4 class="stat-card-value">1,234</h4>
+                        <span class="stat-card-change text-success"><i class="fas fa-arrow-up"></i> 8%</span> vs last month
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="card stat-card h-100">
-                        <p class="stat-title">Total order</p>
-                        <h4 class="stat-value"><?= $stats['total_transactions'] ?></h4><span class="stat-change text-danger">-1.62%</span><span class="text-muted small"> in a last month</span>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon icon-orders"><i class="fas fa-receipt"></i></div>
+                        <p class="stat-card-title">Total Orders</p>
+                        <h4 class="stat-card-value"><?= $stats['total_transactions'] ?></h4>
+                        <span class="stat-card-change text-danger"><i class="fas fa-arrow-down"></i> 2%</span> vs last month
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="card stat-card h-100">
-                        <p class="stat-title">Conversion rate</p>
-                        <h4 class="stat-value">4.98%</h4><span class="stat-change text-success">+0.31%</span><span class="text-muted small"> in a last month</span>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon icon-sales"><i class="fas fa-chart-line"></i></div>
+                        <p class="stat-card-title">Conversion Rate</p>
+                        <h4 class="stat-card-value">5.8%</h4>
+                        <span class="stat-card-change text-success"><i class="fas fa-arrow-up"></i> 0.5%</span> vs last month
                     </div>
                 </div>
             </div>
         </section>
-        <section class="sales-revenue-section mt-4">
-            <div class="card">
-                <div class="card-body p-4">
-                    <h5 class="card-title">Sales Revenue</h5>
-                    <div style="height: 300px;"><canvas id="salesChart"></canvas></div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="dashboard-section h-100">
+                    <div class="section-header">
+                        <h5>Sales Statistics</h5>
+                        <select class="form-select form-select-sm w-auto">
+                            <option>This Month</option>
+                            <option>Last 3 Months</option>
+                            <option>This Year</option>
+                        </select>
+                    </div>
+                    <div style="height: 350px;"><canvas id="salesChart"></canvas></div>
                 </div>
             </div>
-        </section>
-        <section class="latest-order-section mt-4">
-            <div class="card">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center p-4">
-                    <h5 class="mb-0">Latest Order</h5><a href="index.php?action=orders" class="small text-decoration-none">See all</a>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-hover mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>Customer name</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                    <th class="text-end">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($stats['recent_transactions'])): ?>
-                                    <?php foreach (array_slice($stats['recent_transactions'], 0, 5) as $trx): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($trx['username']) ?></td>
-                                            <td><span class="badge bg-success-soft rounded-pill">Complete</span></td>
-                                            <td><?= date('d M, Y', strtotime($trx['transaction_date'])) ?></td>
-                                            <td class="text-end fw-bold">Rp<?= number_format($trx['total_price'], 0, ',', '.') ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+            <div class="col-lg-4">
+                <div class="dashboard-section h-100">
+                    <div class="section-header">
+                        <h5>Top Products</h5><a href="index.php?action=products" class="small">See All</a>
+                    </div>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <?php if (!empty($stats['best_selling_products'])): ?>
+                                <?php foreach ($stats['best_selling_products'] as $product): ?>
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted p-4">No recent orders.</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="public/images/products/<?= htmlspecialchars($product['image_url'] ?? 'default.jpg') ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                                                <span class="ms-3 fw-bold"><?= htmlspecialchars($product['name']) ?></span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end fw-bold"><?= $product['total_sold'] ?> sold</td>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td class="text-muted text-center">No products sold yet.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const salesChartCanvas = document.getElementById('salesChart');
     if (salesChartCanvas) {
         new Chart(salesChartCanvas, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: <?= json_encode($stats['weekly_sales']['labels'] ?? []) ?>,
                 datasets: [{
-                    label: 'Sales Revenue',
+                    label: 'Sales',
                     data: <?= json_encode($stats['weekly_sales']['data'] ?? []) ?>,
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#3B82F6',
-                    pointHoverRadius: 7,
-                    pointHoverBackgroundColor: '#3B82F6'
+                    backgroundColor: 'rgba(90, 106, 207, 0.7)',
+                    borderRadius: 5
                 }]
             },
             options: {
