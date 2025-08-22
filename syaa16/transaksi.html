@@ -8,29 +8,36 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <style>
+        :root {
+            --bs-primary-green: #28a745;
+            --bs-dark-gray: #343a40;
+            --bs-light-bg: #f8f9fa;
+            --bs-border-color: #e0e0e0;
+        }
+
         body {
             font-family: "poppins", sans-serif;
             min-height: 100vh;
-            background-color: #f8f9fa;
+            background-color: var(--bs-light-bg);
+            overflow-x: hidden;
         }
 
-        /* Tampilan Desktop dan Tablet */
         #sidebar {
             min-width: 250px;
             max-width: 250px;
-            background-color: #343a40 !important;
+            background-color: var(--bs-dark-gray) !important;
             color: white;
             transition: all 0.3s ease-in-out;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             padding: 1.5rem;
-            position: sticky; /* Sidebar tetap di tempat saat di-scroll */
+            position: sticky;
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: auto; /* Memungkinkan scrolling di sidebar jika isinya panjang */
+            overflow-y: auto;
+            flex-shrink: 0;
         }
-        
-        /* Tampilan Mobile */
+
         @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
@@ -54,8 +61,7 @@
                 display: block;
             }
         }
-        
-        /* Aturan umum untuk semua ukuran layar */
+
         .nav-item a.nav-link {
             color: rgba(255, 255, 255, 0.8) !important;
             transition: all 0.3s ease;
@@ -79,6 +85,7 @@
         .card {
             border-radius: 12px;
             border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         .list-group-item {
             border-radius: 8px;
@@ -90,38 +97,11 @@
         .list-group-item:hover {
             background-color: #f8f9fa;
         }
-        .image-card {
-            width: 60px;
-            height: 60px;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        .image-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        /* Tab styles */
-        .nav-tabs .nav-link {
-            color: #495057;
-            background-color: #e9ecef;
-            border: none;
-            font-weight: 500;
-        }
-        .nav-tabs .nav-link:hover {
-            color: #495057;
-            background-color: #e9ecef;
-        }
-        .nav-tabs .nav-link.active {
-            color: #fff !important;
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
         #content {
             flex: 1;
             padding: 2rem;
+            min-width: 0;
         }
-        /* Aturan untuk menyembunyikan tombol nav di desktop */
         .d-md-none {
             display: none !important;
         }
@@ -129,6 +109,48 @@
             .d-md-none {
                 display: block !important;
             }
+        }
+        
+        .transaction-table th, .transaction-table td {
+            border-bottom: 1px solid var(--bs-border-color);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .transaction-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .status-badge {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5em 0.8em;
+            border-radius: 12px;
+        }
+        .status-completed {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--bs-primary-green);
+        }
+        .status-failed {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        .pagination .page-link {
+            border-radius: 8px;
+            margin: 0 4px;
+            border: 1px solid var(--bs-border-color);
+            color: var(--bs-dark-gray);
+        }
+        .pagination .page-link.active {
+            background-color: var(--bs-primary-green);
+            border-color: var(--bs-primary-green);
+            color: white;
+        }
+        .table-action-dots {
+            font-size: 1.5rem;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -146,7 +168,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-secondary" href="chat.html"><i class="bi bi-chat-left-text-fill me-2"></i>Chat</a>
-                </li>
+            </li>
             <li class="nav-item">
                 <a class="nav-link active-sidebar" href="transaksi.html"><i class="bi bi-cart me-2"></i>Transactions</a>
             </li>
@@ -180,60 +202,184 @@
         <div>
             <button class="btn btn-success mb-3 d-md-none" id="sidebarCollapse">nav menu</button>
         </div>
-        
-        <div class="card p-4 shadow-sm">
-            <ul class="nav nav-tabs mb-4">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Sell Product</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Buy Product</a>
-                </li>
-            </ul>
-            <div class="list-group list-group-flush">
-                <div class="list-group-item d-flex align-items-center justify-content-between py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="image-card me-3">
-                            <img src="images/original-404017a673d4494974fa15d04c250a70.webp" alt="Shirup Marzzan">
-                        </div>
-                        <div>
-                            <div class="fw-bold">Shirup Marzzan</div>
-                            <div class="text-muted small">Angga Risky</div>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-12">
+                <div class="row mb-4 g-4">
+                    <div class="col-md-4">
+                        <div class="card p-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <h6 class="mb-0 text-muted">Total Transactions This Month</h6>
+                                <i class="bi bi-arrow-up-right text-success ms-auto"></i>
+                            </div>
+                            <h3 class="fw-bold">$125,430</h3>
+                            <p class="text-success small mb-0"><i class="bi bi-caret-up-fill me-1"></i>12.5% compared to last month</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center text-end">
-                        <span class="text-muted me-2">12 Januari, 2020</span>
-                        <i class="bi bi-chevron-right text-muted"></i>
-                    </div>
-                </div>
-                <div class="list-group-item d-flex align-items-center justify-content-between py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="image-card me-3">
-                            <img src="images/original-1dcb5ced742b2a4122ce2b233725b0f6.webp" alt="LeBrone X">
-                        </div>
-                        <div>
-                            <div class="fw-bold">LeBrone X</div>
-                            <div class="text-muted small">Masayoshi</div>
+                    <div class="col-md-4">
+                        <div class="card p-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <h6 class="mb-0 text-muted">Total Income</h6>
+                                <i class="bi bi-arrow-up-right text-success ms-auto"></i>
+                            </div>
+                            <h3 class="fw-bold">$92,000</h3>
+                            <p class="text-success small mb-0"><i class="bi bi-caret-up-fill me-1"></i>16.5% compared to last month</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center text-end">
-                        <span class="text-muted me-2">11 Januari, 2020</span>
-                        <i class="bi bi-chevron-right text-muted"></i>
+                    <div class="col-md-4">
+                        <div class="card p-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <h6 class="mb-0 text-muted">Total Expenses</h6>
+                                <i class="bi bi-arrow-down-right text-danger ms-auto"></i>
+                            </div>
+                            <h3 class="fw-bold">$58,500</h3>
+                            <p class="text-danger small mb-0"><i class="bi bi-caret-down-fill me-1"></i>-8.5% compared to last month</p>
+                        </div>
                     </div>
                 </div>
-                <div class="list-group-item d-flex align-items-center justify-content-between py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="image-card me-3">
-                            <img src="images/original-1dcb5ced742b2a4122ce2b233725b0f6.webp" alt="Soffa Lembutte">
+
+                <div class="card p-4 shadow-sm">
+                    <h5 class="fw-bold mb-3">Transactions</h5>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <div class="input-group" style="max-width: 250px;">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control border-start-0" placeholder="Search...">
                         </div>
-                        <div>
-                            <div class="fw-bold">Soffa Lembutte</div>
-                            <div class="text-muted small">Shayna</div>
-                        </div>
+                        <select class="form-select" style="max-width: 150px;">
+                            <option selected>All Status</option>
+                            <option>Completed</option>
+                            <option>Pending</option>
+                            <option>Failed</option>
+                        </select>
+                        <select class="form-select" style="max-width: 150px;">
+                            <option selected>Latest</option>
+                            <option>Oldest</option>
+                        </select>
+                        <button class="btn btn-outline-secondary"><i class="bi bi-list"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="bi bi-grid-3x3-gap"></i></button>
                     </div>
-                    <div class="d-flex align-items-center text-end">
-                        <span class="text-muted me-2">11 Januari, 2020</span>
-                        <i class="bi bi-chevron-right text-muted"></i>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle transaction-table">
+                            <thead>
+                                <tr class="text-muted">
+                                    <th><input class="form-check-input" type="checkbox"></th>
+                                    <th>TRANSACTION ID</th>
+                                    <th>PAYMENT NAME</th>
+                                    <th>AMOUNT</th>
+                                    <th>DATE</th>
+                                    <th>STATUS</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020110</td>
+                                    <td>Transfer from Bank</td>
+                                    <td class="text-danger fw-bold">-$980</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020109</td>
+                                    <td>YouTube Premium</td>
+                                    <td class="text-danger fw-bold">-$20</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020108</td>
+                                    <td>Internet</td>
+                                    <td class="text-danger fw-bold">-$120</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020107</td>
+                                    <td>Transfer from Bank</td>
+                                    <td class="text-danger fw-bold">-$1,000</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020106</td>
+                                    <td>Transfer from Bank</td>
+                                    <td class="text-danger fw-bold">-$1,200</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020105</td>
+                                    <td>Starbucks Coffee</td>
+                                    <td class="text-danger fw-bold">-$12</td>
+                                    <td>February 29, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020104</td>
+                                    <td>Salary (Freelance)</td>
+                                    <td class="text-success fw-bold">+$500</td>
+                                    <td>February 28, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020103</td>
+                                    <td>Crypto Investment</td>
+                                    <td class="text-danger fw-bold">-$1,000</td>
+                                    <td>February 28, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020102</td>
+                                    <td>Amazon Purchase</td>
+                                    <td class="text-danger fw-bold">-$30</td>
+                                    <td>February 27, 2025</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></i></td>
+                                </tr>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>TWN-24020101</td>
+                                    <td>Spotify Premium</td>
+                                    <td class="text-danger fw-bold">-$40</td>
+                                    <td>February 27, 2025</td>
+                                    <td><span class="status-badge status-failed">Failed</span></td>
+                                    <td class="text-end"><i class="bi bi-three-dots-vertical table-action-dots"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                        <small class="text-muted">Show data 10 of 200</small>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm my-0">
+                                <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">10</a></li>
+                                <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
