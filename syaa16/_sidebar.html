@@ -1,51 +1,31 @@
-<nav id="sidebar" class="sidebar-wrapper">
+<nav class="sidebar">
     <div class="sidebar-header">
-        <a class="sidebar-brand" href="admin.html">
-            <i class="fas fa-leaf me-2"></i>
+        <a href="admin.html" class="sidebar-brand">
+            <i class="fas fa-leaf"></i>
             <span>SmartFarm</span>
         </a>
     </div>
-
-    <div class="sidebar-menu">
-        <p class="menu-header">Main Menu</p>
-        <ul class="list-unstyled components">
-            <li data-page="admin.html">
-                <a href="admin.html"><i class="fas fa-home fa-fw me-3"></i>Dashboard</a>
-            </li>
-            <li data-page="my product.html">
-                <a href="my_product.html"><i class="fas fa-box fa-fw me-3"></i>My Product</a>
-            </li>
-            <li data-page="chat.html">
-                <a href="chat.html"><i class="fas fa-envelope fa-fw me-3"></i>Chat <span class="badge bg-danger ms-auto">2</span></a>
-            </li>
-            <li data-page="transaksi.html">
-                <a href="transaksi.html"><i class="fas fa-receipt fa-fw me-3"></i>Transactions</a>
-            </li>
-             <li data-page="store.html">
-                <a href="store.html"><i class="fas fa-store fa-fw me-3"></i>Store Settings</a>
-            </li>
-             <li data-page="my account.html">
-                <a href="my_account.html"><i class="fas fa-user-cog fa-fw me-3"></i>My Account</a>
-            </li>
-        </ul>
-
-        <p class="menu-header">Lainnya</p>
-        <ul class="list-unstyled components">
-            <li><a href="#"><i class="fas fa-bullhorn fa-fw me-3"></i>Promotion</a></li>
-            <li><a href="#"><i class="fas fa-file-invoice-dollar fa-fw me-3"></i>Finance</a></li>
-        </ul>
-    </div>
-
+    <ul class="sidebar-nav">
+        <li class="sidebar-item" data-page="admin.html">
+            <a href="admin.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        </li>
+        <li class="sidebar-item" data-page="my_product.html">
+            <a href="my_product.html" class="sidebar-link"><i class="fas fa-box"></i><span>Products</span></a>
+        </li>
+        <li class="sidebar-item" data-page="transaksi.html">
+            <a href="transaksi.html" class="sidebar-link"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+        </li>
+        <li class="sidebar-item" data-page="chat.html">
+            <a href="chat.html" class="sidebar-link"><i class="fas fa-comments"></i><span>Messages</span></a>
+        </li>
+         <li class="sidebar-item" data-page="store.html">
+            <a href="store.html" class="sidebar-link"><i class="fas fa-store"></i><span>Store Settings</span></a>
+        </li>
+         <li class="sidebar-item" data-page="my_account.html">
+            <a href="my_account.html" class="sidebar-link"><i class="fas fa-user-cog"></i><span>My Account</span></a>
+        </li>
+    </ul>
     <div class="sidebar-footer">
-        <div class="user-profile-block">
-            <img src="https://github.com/mdo.png" alt="User Avatar" class="user-avatar">
-            <div class="user-info">
-                <span class="user-name">Syaa (Admin)</span>
-                <span class="user-role">Administrator</span>
-            </div>
-            <a href="#" class="logout-icon ms-auto" title="Logout">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        </div>
+        <a href="#" class="sidebar-link logout-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
     </div>
 </nav>
