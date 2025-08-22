@@ -1,0 +1,117 @@
+:root {
+  --sidebar-bg: #222e3c;
+  --sidebar-text: #adb5bd;
+  --sidebar-hover-bg: #344254;
+  --sidebar-active-bg: #0d6efd;
+  --main-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--main-bg);
+  display: flex;
+}
+
+.admin-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.sidebar-header {
+  padding: 1.25rem;
+  border-bottom: 1px solid #344254;
+}
+.sidebar-brand {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.sidebar-brand i { color: #28a745; margin-right: 10px; }
+.sidebar-nav { list-style: none; padding: 1rem; flex-grow: 1; }
+.sidebar-item { margin-bottom: 5px; }
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.sidebar-link i { width: 20px; margin-right: 15px; text-align: center; }
+.sidebar-link:hover { background-color: var(--sidebar-hover-bg); color: #fff; }
+.sidebar-item.active > .sidebar-link { background-color: var(--sidebar-active-bg); color: #fff; font-weight: 500; }
+.sidebar-footer { padding: 1rem; border-top: 1px solid #344254; }
+.logout-link { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; }
+.logout-link:hover { background-color: #dc3545; color: #fff; }
+
+/* ===== MAIN CONTENT & HEADER ===== */
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+.page-header {
+  margin-bottom: 2rem;
+}
+.page-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* ===== PRODUCT CARD DESIGN ===== */
+.product-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+.product-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.product-card .card-body {
+    padding: 1rem;
+}
+.product-card .card-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+.product-card .product-price {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--sidebar-active-bg);
+}
+.product-card .card-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+}
