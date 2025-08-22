@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store</title>
+    <title>My Product</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: "poppins", sans-serif;
             min-height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #f5f6f8;
         }
 
         /* Tampilan Desktop dan Tablet */
@@ -76,24 +77,20 @@
         .semi-transparent {
             opacity: 0.5;
         }
-        .form-check-input:checked {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-        .form-check-input:checked[type="radio"] {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
-        }
-        .form-control, .form-select, .form-control:focus {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-        }
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
         #content {
             flex: 1;
             padding: 2rem;
         }
+        .card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+        .card-img-top {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+
         /* Aturan untuk menyembunyikan tombol nav di desktop */
         .d-md-none {
             display: none !important;
@@ -103,9 +100,11 @@
                 display: block !important;
             }
         }
+        
     </style>
 </head>
 <body>
+
     <div class="d-flex w-100">
         <nav id="sidebar" class="bg-dark">
             <img src="images/istockphoto-1342354750-612x612-removebg-preview.png" class="img-fluid w-50" alt="Logo">
@@ -114,16 +113,16 @@
                     <a class="nav-link text-secondary" href="admin.html"><i class="bi bi-grid-fill me-2"></i>Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-secondary" href="my product.html"><i class="bi bi-box-seam me-2"></i>My Product</a>
+                    <a class="nav-link active-sidebar" href="my product.html"><i class="bi bi-box-seam me-2"></i>My Product</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link text-secondary" href="chat.html"><i class="bi bi-chat-left-text-fill me-2"></i>Chat</a>
-                </li>
+            </li>
                 <li class="nav-item">
                     <a class="nav-link text-secondary" href="transaksi.html"><i class="bi bi-cart me-2"></i>Transactions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active-sidebar" href="store.html"><i class="bi bi-gear me-2"></i>Store Settings</a>
+                    <a class="nav-link text-secondary" href="store.html"><i class="bi bi-gear me-2"></i>Store Settings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-secondary" href="my account.html"><i class="bi bi-person-circle me-2"></i>My Account</a>
@@ -133,14 +132,14 @@
                 </li>
             </ul>
         </nav>
-
+    
         <div id="overlay"></div>
-
+    
         <div id="content">
             <div class="row mb-4 align-items-center">
                 <div class="col">
-                    <h3>Store settings</h3>
-                    <p class="semi-transparent">make store that profitable</p>
+                    <h3>My product</h3>
+                    <p class="semi-transparent">manage it well and get money!</p>
                 </div>
                 <div class="col-auto">
                     <nav class="navbar">
@@ -153,57 +152,72 @@
             </div>
             <div>
                 <button class="btn btn-success mb-3 d-md-none" id="sidebarCollapse">nav menu</button>
+                <a href="pilihproduct.html">
+                    <button class="btn btn-success mb-3">add new product</button>
+                </a>
             </div>
-
-            <div class="card p-4 rounded-3 shadow-lg">
+        
+            <div class="container text-justify ">
                 <div class="row">
-                    <div class="col-12 col-md-6 mb-3">
-                        <label for="storeName" class="form-label">Store Name</label>
-                        <input type="text" class="form-control" id="storeName" value="Shabrina's Garden">
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <label for="storeCategory" class="form-label">Store Category</label>
-                        <select id="storeCategory" class="form-select">
-                            <option>none</option>
-                            <option selected>plant</option>
-                            <option>seed</option>
-                            <option>vegetables</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <label for="storeDescription" class="form-label">Store Description</label>
-                        <textarea class="form-control" id="storeDescription" rows="3">Providing fresh plants and high-quality seeds for a beautiful garden. Happy planting!</textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h5 class="mt-2">Store Status</h5>
-                        <p class="semi-transparent">Is your store currently open?</p>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="storeStatus" id="storeStatusOpen" value="open" checked>
-                            <label class="form-check-label" for="storeStatusOpen">
-                                Open
-                            </label>
-                        </div>
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="radio" name="storeStatus" id="storeStatusClose" value="close">
-                            <label class="form-check-label" for="storeStatusClose">
-                                Close
-                            </label>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/images (1).jpeg" class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">aku</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-success w-100 py-2">Save Now</button>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/pngtree-plant-in-pot-png-image_11480457.png " class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">plant</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/images (3).jpeg" class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">plant</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/images (4).jpeg" class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">plant</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/pngtree-home-plant-in-pot-png-image_11520726.png" class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">plant</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card mb-2" style="width: 18rem;">
+                            <img src="images/pngtree-home-plant-in-pot-png-image_14593581.png" class="card-img-top" alt="photo">
+                            <div class="card-body">
+                                <h5 class="card-title">plant</h5>
+                                <p class="card-text semi-transparent">plant</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
@@ -218,14 +232,14 @@
                 }
             });
         }
-
+    
         if (overlay) {
             overlay.addEventListener('click', () => {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
         }
-
+    
         function handleResize() {
             if (window.innerWidth > 768) {
                 sidebar.classList.remove('active');
@@ -234,7 +248,7 @@
                 }
             }
         }
-
+    
         window.addEventListener('resize', handleResize);
         handleResize();
     </script>
