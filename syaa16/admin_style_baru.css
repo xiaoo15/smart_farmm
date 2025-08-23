@@ -245,3 +245,18 @@ body {
 .badge.bg-primary-soft {
   background-color: rgba(13, 110, 253, 0.1);
 }
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Warna semi-transparan */
+  z-index: 999; /* Pastikan overlay berada di atas semua elemen lain */
+  display: none; /* Sembunyikan secara default */
+}
+
+#overlay.active {
+  display: block; /* Tampilkan saat kelas 'active' ditambahkan oleh JS */
+}
