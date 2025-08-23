@@ -57,12 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+
   // Load sidebar HTML
   fetch('_sidebar.html')
     .then(res => res.text())
     .then(html => {
       document.getElementById('sidebar-container').innerHTML = html;
       setupSidebarToggle();
+      setupSidebarActive();
     });
 
   function setupSidebarToggle() {
@@ -71,15 +73,57 @@ document.addEventListener('DOMContentLoaded', function () {
     if (hamburger && sidebar) {
       hamburger.addEventListener('click', function () {
         sidebar.classList.toggle('active');
+        hamburger.classList.toggle('active');
       });
       // Optional: close sidebar when clicking outside (mobile)
       document.addEventListener('click', function (e) {
         if (window.innerWidth < 992 && sidebar.classList.contains('active')) {
           if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
             sidebar.classList.remove('active');
+            hamburger.classList.remove('active');
           }
         }
       });
     }
+  }
+
+  function setupSidebarActive() {
+    // Highlight menu yang aktif saat diklik
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    const links = sidebar.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', function () {
+        links.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    // Highlight menu sesuai url saat load
+    const current = window.location.pathname.split('/').pop();
+    links.forEach(link => {
+      if (link.getAttribute('href') && link.getAttribute('href').includes(current)) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  function setupSidebarActive() {
+    // Highlight menu yang aktif saat diklik
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    const links = sidebar.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', function () {
+        links.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    // Highlight menu sesuai url saat load
+    const current = window.location.pathname.split('/').pop();
+    links.forEach(link => {
+      if (link.getAttribute('href') && link.getAttribute('href').includes(current)) {
+        link.classList.add('active');
+      }
+    });
   }
 });
