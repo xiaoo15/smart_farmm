@@ -1,24 +1,25 @@
+/* File: syaa16/admin_style_baru.css */
 :root {
-  --sidebar-bg: #222e3c;
-  --sidebar-text: #adb5bd;
-  --sidebar-hover-bg: #344254;
-  --sidebar-active-bg: #0d6efd;
-  --main-bg: #f8f9fa;
+  --sidebar-bg: #fff;
+  --sidebar-text: #555;
+  --sidebar-hover-bg: #f0f2f5;
+  --sidebar-active-bg: #e6f0ff;
+  --sidebar-active-text: #0d6efd;
+  --main-bg: #f0f2f5;
   --card-bg: #ffffff;
   --text-primary: #212529;
   --text-secondary: #6c757d;
-  --border-color: #dee2e6;
+  --border-color: #e9ecef;
 }
 
 body {
   font-family: "Poppins", sans-serif;
   background-color: var(--main-bg);
-  display: flex;
 }
 
 .admin-wrapper {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 /* ===== SIDEBAR ===== */
@@ -32,20 +33,29 @@ body {
   height: 100vh;
   position: sticky;
   top: 0;
+  border-right: 1px solid var(--border-color);
 }
 .sidebar-header {
   padding: 1.25rem;
-  border-bottom: 1px solid #344254;
 }
 .sidebar-brand {
-  color: #fff;
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: 600;
 }
-.sidebar-brand i { color: #28a745; margin-right: 10px; }
-.sidebar-nav { list-style: none; padding: 1rem; flex-grow: 1; }
-.sidebar-item { margin-bottom: 5px; }
+.sidebar-brand i {
+  color: #28a745;
+  margin-right: 10px;
+}
+.sidebar-nav {
+  list-style: none;
+  padding: 1rem;
+  flex-grow: 1;
+}
+.sidebar-item {
+  margin-bottom: 5px;
+}
 .sidebar-link {
   display: flex;
   align-items: center;
@@ -53,65 +63,165 @@ body {
   color: var(--sidebar-text);
   text-decoration: none;
   border-radius: 8px;
+  font-weight: 500;
   transition: all 0.2s ease;
 }
-.sidebar-link i { width: 20px; margin-right: 15px; text-align: center; }
-.sidebar-link:hover { background-color: var(--sidebar-hover-bg); color: #fff; }
-.sidebar-item.active > .sidebar-link { background-color: var(--sidebar-active-bg); color: #fff; font-weight: 500; }
-.sidebar-footer { padding: 1rem; border-top: 1px solid #344254; }
-.logout-link { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; }
-.logout-link:hover { background-color: #dc3545; color: #fff; }
+.sidebar-link i {
+  width: 20px;
+  margin-right: 15px;
+  text-align: center;
+}
+.sidebar-link:hover {
+  background-color: var(--sidebar-hover-bg);
+  color: var(--text-primary);
+}
+.sidebar-item.active > .sidebar-link {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+}
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
 
-/* ===== MAIN CONTENT & HEADER ===== */
+/* ===== KONTEN UTAMA ===== */
 .main-content {
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
+  height: 100vh;
 }
-.page-header {
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
 }
-.page-title {
+.content-header h2 {
   font-weight: 600;
-  color: var(--text-primary);
+  margin-bottom: 0.25rem;
 }
-.breadcrumb {
-    background-color: transparent;
-    padding: 0;
+.content-header p {
+  margin-bottom: 0;
 }
 
-/* ===== PRODUCT CARD DESIGN ===== */
-.product-card {
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* ===== KARTU STATISTIK ===== */
+.stat-card {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+.stat-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
 }
-.product-card .card-img-top {
-    height: 200px;
-    object-fit: cover;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+.icon-earnings {
+  background-color: #5a6acf;
 }
-.product-card .card-body {
-    padding: 1rem;
+.icon-visitors {
+  background-color: #3b82f6;
 }
-.product-card .card-title {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+.icon-orders {
+  background-color: #f59e0b;
 }
-.product-card .product-price {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--sidebar-active-bg);
+.icon-sales {
+  background-color: #10b981;
 }
-.product-card .card-footer {
-    background-color: transparent;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    gap: 0.5rem;
+
+.stat-card-title {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+.stat-card-value {
+  font-weight: 600;
+}
+.stat-card-change {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ===== SECTION LAINNYA ===== */
+.dashboard-section {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.section-header h5 {
+  font-weight: 600;
+  margin: 0;
+}
+.table img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.activity-list .list-group-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-color: var(--border-color) !important;
+}
+
+.activity-list .list-group-item:first-child {
+  border-top: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: #fff;
+}
+
+.activity-content {
+  line-height: 1.4;
+}
+
+/* Warna-warni ikon dan badge notifikasi */
+.icon-completed {
+  background-color: #10b981;
+}
+.icon-delivery {
+  background-color: #0dcaf0;
+}
+.icon-pending {
+  background-color: #ffc107;
+}
+.icon-new {
+  background-color: #0d6efd;
+}
+
+.badge.bg-success-soft {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+.badge.bg-info-soft {
+  background-color: rgba(13, 202, 240, 0.1);
+}
+.badge.bg-warning-soft {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+.badge.bg-primary-soft {
+  background-color: rgba(13, 110, 253, 0.1);
 }
