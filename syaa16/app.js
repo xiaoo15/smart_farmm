@@ -1,21 +1,27 @@
 // File: syaa16/app.js (VERSI FINAL + RESPONSIVE)
 document.addEventListener("DOMContentLoaded", function () {
-  fetch("_sidebar.html")
-    .then((response) =>
-      response.ok ? response.text() : Promise.reject("Sidebar not found")
-    )
-    .then((data) => {
-      document.getElementById("sidebar-container").innerHTML = data;
-      highlightActiveMenu();
-      // Panggil fungsi event listener SETELAH sidebar dimuat
-      setupEventListeners();
-    })
-    .catch((error) => console.error("Error loading sidebar:", error));
+  const sidebarContainer = document.getElementById("sidebar-container");
+  
+  // Pastikan ada container sidebar, kalau tidak, berarti halaman itu tidak pakai sidebar
+  if (sidebarContainer) {
+    fetch("_sidebar.html")
+      .then((response) =>
+        response.ok ? response.text() : Promise.reject("Sidebar not found")
+      )
+      .then((data) => {
+        sidebarContainer.innerHTML = data;
+        highlightActiveMenu();
+        setupEventListeners();
+      })
+      .catch((error) => console.error("Error loading sidebar:", error));
+  }
+
 
   function highlightActiveMenu() {
     const currentPage = window.location.pathname.split("/").pop();
     const menuItems = document.querySelectorAll(".sidebar-nav .sidebar-item");
     menuItems.forEach((item) => {
+      // Periksa atribut data-page pada <li>
       if (item.dataset.page === currentPage) {
         item.classList.add("active");
       }
@@ -26,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function setupEventListeners() {
     const hamburgerBtn = document.querySelector(".hamburger-btn");
     const sidebar = document.querySelector(".sidebar");
-
+    
     // Buat overlay jika belum ada
     let overlay = document.getElementById("overlay");
     if (!overlay) {
@@ -34,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
       overlay.id = "overlay";
       document.body.appendChild(overlay);
     }
-
+    
+    // Pastikan tombol dan sidebar ada
     if (hamburgerBtn && sidebar) {
       hamburgerBtn.addEventListener("click", () => {
         sidebar.classList.add("active");
@@ -44,6 +51,34 @@ document.addEventListener("DOMContentLoaded", function () {
       overlay.addEventListener("click", () => {
         sidebar.classList.remove("active");
         overlay.classList.remove("active");
+      });
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Load sidebar HTML
+  fetch('_sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      setupSidebarToggle();
+    });
+
+  function setupSidebarToggle() {
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.querySelector('.hamburger-btn');
+    if (hamburger && sidebar) {
+      hamburger.addEventListener('click', function () {
+        sidebar.classList.toggle('active');
+      });
+      // Optional: close sidebar when clicking outside (mobile)
+      document.addEventListener('click', function (e) {
+        if (window.innerWidth < 992 && sidebar.classList.contains('active')) {
+          if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+            sidebar.classList.remove('active');
+          }
+        }
       });
     }
   }

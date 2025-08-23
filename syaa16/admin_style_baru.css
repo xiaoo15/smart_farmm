@@ -24,16 +24,15 @@ body {
 
 /* ===== SIDEBAR ===== */
 .sidebar {
-  width: 260px;
-  min-width: 260px;
-  background-color: var(--sidebar-bg);
-  color: var(--sidebar-text);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  position: sticky;
+  width: 220px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
   top: 0;
-  border-right: 1px solid var(--border-color);
+  z-index: 1030;
+  transition: left 0.3s;
+  background: #fff;
+  border-right: 1px solid #eee;
 }
 .sidebar-header {
   padding: 1.25rem;
@@ -82,6 +81,27 @@ body {
 .sidebar-footer {
   padding: 1rem;
   border-top: 1px solid var(--border-color);
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    left: -220px;
+    position: fixed;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+/* Main content shift when sidebar open (desktop) */
+@media (min-width: 992px) {
+  .main-content {
+    margin-left: 220px;
+    transition: margin-left 0.3s;
+  }
 }
 
 /* ===== KONTEN UTAMA ===== */
